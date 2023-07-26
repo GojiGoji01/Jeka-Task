@@ -57,8 +57,27 @@ void main(List<String> arguments) {
 // result.add(37);
 
 // print(result);
-  List<int> list = List.from([1, 5, 6, 8, 9, 0, 2]);
-  int stopElement = 2;
+//   List<int> list = List.from([1, 5, 6, 8, 9, 0, 2]);
+//   int stopElement = 2;
+//   List<int> result = [];
+
+//   for (int i = 0; i < list.length; i++) {
+//     if (list[i] == stopElement) {
+//       break;
+//     }
+//     result.add(list[i]);
+//   }
+//   print(result);
+// }
+  List<int> list = List.from([
+    4,
+    10,
+    45,
+    67,
+    78,
+    -3,
+  ]);
+  int stopElement = 78;
   List<int> result = [];
 
   for (int i = 0; i < list.length; i++) {
@@ -67,5 +86,6 @@ void main(List<String> arguments) {
     }
     result.add(list[i]);
   }
+
   print(result);
 }
