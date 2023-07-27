@@ -1,31 +1,54 @@
 void main(List<String> arguments) {
-  // 11111 ✅
-  // List<int> list = [0, 1, 3, 4, 5, 2, 1, -4, -1, 10, 55];
+  const taskNumber = 3;
+  switch (taskNumber) {
+    case 1:
+      task1(); // ✅
+    case 2:
+      task2();
+    case 3:
+      task3();
+    case 4:
+      task4(); // ✅
+    case 5:
+      task5();
+    default:
+      print('No task with $taskNumber number. Provide task number from 1 to 5');
+  }
+}
 
-  // print('$list');
-// 222222  -> в целом ок, но сделай еще одно решение этой задачи
-// без использования .reversed.
-  // List<int> list = [0, 1, 3, 4, 5, 2, 1, -4, -1, 10, 55];
-  // List<int> reversedList = list.reversed.toList();
-  // print('Вот развернул туда сюда; $reversedList');
+void task1() {
+  List<int> list = [0, 1, 3, 4, 5, 2, 1, -4, -1, 10, 55];
 
-  // /333333 -> сделай решение без использования .where и .isEven
-  // /
-  // List<int> list = [0, 1, 3, 4, 5, 2, 1, -4, -1, 10, 55];
-  // List<int> evenNumbers = list.where((number) => number.isEven).toList();
+  print('$list');
+}
 
-  // print(evenNumbers);
+void task2() {
+  List<int> list = [0, 1, 3, 4, 5, 2, 1, -4, -1, 10, 55];
+  List<int> reversedList = list.reversed.toList();
+  print('Вот развернул туда сюда; $reversedList');
 
-  //////444444444 ✅
-  ///
-  // List<int> list = List.from([0, 1, 3, 4, 5, 2, 1, -4, -1, 10, 55]);
-  // List<int> skipList = [];
-  // for (int i = 0; i < list.length; i += 2) {
-  //   skipList.add(list[i]);
-  // }
-  // print(skipList);
+  // Solution without using .reversed
+}
 
-  // TASK 5
+void task3() {
+  List<int> list = [0, 1, 3, 4, 5, 2, 1, -4, -1, 10, 55];
+  List<int> evenNumbers = list.where((number) => number.isEven).toList();
+
+  print(evenNumbers);
+
+  // Solution without .where and .isEven
+}
+
+void task4() {
+  List<int> list = List.from([0, 1, 3, 4, 5, 2, 1, -4, -1, 10, 55]);
+  List<int> skipList = [];
+  for (int i = 0; i < list.length; i += 2) {
+    skipList.add(list[i]);
+  }
+  print(skipList);
+}
+
+void task5() {
   /*
   решение неверное, числа должны выводиться ПОКА НЕ встретится -1. Т.е. когда 
   оно встречается, то уже не должно быть его вывода.
@@ -40,60 +63,9 @@ void main(List<String> arguments) {
       - [5234, 1234, -2, -1, 3489, 432, -124, 12345, -12345]
       - [10, 10, -10, 1, -1]
   */
-  // List<int> list = [0, 1, 3, 4, 5, 2, 1, -4, -1, 10, 55];
-  // int stopElement = 10;
-  // List<int> result = [];
 
-  // for (int i = 0; i < list.length; i++) {
-  //   if (list[i] == stopElement) {
-  //     break;
-  //   }
-  //   result.add(list[i]);
-  // }
-
-  // print(result);
-
-//   List<int> list = List.from([0, 2, 3, 4, 5, 6, 7, -1]);
-//   int stopElement = -1;
-//   List<int> result = [];
-//   for (int i = 0; i < list.length; i++) {
-//     if (list[i] == stopElement) {
-//       break;
-//     }
-//     result.add(list[i]);
-//   }
-//   print(result);
-// }
-// List<int> result = [];
-
-// result.add(34);
-// result.add(35);
-// result.add(36);
-// result.add(37);
-
-// print(result);
-<<<<<<< HEAD
-//   List<int> list = List.from([1, 5, 6, 8, 9, 0, 2]);
-//   int stopElement = 2;
-//   List<int> result = [];
-
-//   for (int i = 0; i < list.length; i++) {
-//     if (list[i] == stopElement) {
-//       break;
-//     }
-//     result.add(list[i]);
-//   }
-//   print(result);
-// }
-  List<int> list = List.from([
-    4,
-    10,
-    45,
-    67,
-    78,
-    -3,
-  ]);
-  int stopElement = 78;
+  List<int> list = [0, 1, 3, 4, 5, 2, 1, -4, -1, 10, 55];
+  int stopElement = 10;
   List<int> result = [];
 
   for (int i = 0; i < list.length; i++) {
@@ -104,17 +76,4 @@ void main(List<String> arguments) {
   }
 
   print(result);
-=======
-  // List<int> list = List.from([1, 5, 6, 8, 9, 0, 2]);
-  // int stopElement = 2;
-  // List<int> result = [];
-
-  // for (int i = 0; i < list.length; i++) {
-  //   if (list[i] == stopElement) {
-  //     break;
-  //   }
-  //   result.add(list[i]);
-  // }
-  // print(result);
->>>>>>> 8b69a4ad5048839e89ed576f5a88b8fbb458fe3c
 }
