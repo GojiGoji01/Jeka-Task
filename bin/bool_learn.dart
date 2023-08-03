@@ -1,6 +1,9 @@
 // import 'dart:math';
 
+import 'dart:math';
+
 void main() {
+  task3();
   /*
   Здарова. Здесь мы будем учить булеаны. Булеан – это тип данных в языке Dart.
   Записывается булеан в дарте как bool. Бул может хранить все всего два
@@ -117,40 +120,47 @@ void main() {
   */
 }
 
-// void task1() {
-//   /*
-//   Даются переменные x,y,rnd.
-//   Нужно напечатать в консоль '1', если rnd больше, чем y
-//   Напечатать '2', если rnd лежит между x и y.
-//   Напечатать '3', если rnd лежит перед х.
-//   */
-//   final x = 30;
-//   final y = 70;
-//   final rnd = Random().nextInt(100);
-//   if (rnd > y) {
-//     print('1');
-//   } else if (x < rnd && rnd < y) {
-//     print('2');
-//   } else {
-//     print('3');
-//   }
-// }
+void task1() {
+  /*
+  Даются переменные x,y,rnd.
+  Нужно напечатать в консоль '1', если rnd больше, чем y
+  Напечатать '2', если rnd лежит между x и y.
+  Напечатать '3', если rnd лежит перед х.
+  */
+  final x = 30;
+  final y = 70;
+  final rnd = Random().nextInt(100);
+  if (rnd > y) {
+    print('1');
+  } else if (x < rnd && rnd < y) {
+    print('2');
+  } else {
+    print('3');
+  }
+}
 
-// void task2() {
-//   /*
-//   Создай массив со всеми цветами светофора. Пройдись 4 раза по всему массиву, и
-//   выведи в консоль true, когда водителю можно ехать, и false когда ехать нельзя.
-//   */
-//   List<String> trafficLights = ['red', 'orange', 'green'];
-//   for (int i = 0; i < 4; i++) {
-//     print(trafficLights[i % trafficLights.length]);
-//     if (i == 2) {
-//       print('true');
-//     } else {
-//       print('false');
-//     }
-//   }
-// }
+void task2() {
+  /*
+  Создай массив со всеми цветами светофора. Пройдись 4 раза по всему массиву, и
+  выведи в консоль true, когда водителю можно ехать, и false когда ехать нельзя.
+  */
+  List<String> trafficLights = ['red', 'orange', 'green'];
+  for (int i = 0; i < 4; i++) {
+    print(trafficLights[i % trafficLights.length]);
+    // TODO:  Полное дерьмо решение. Ты сравниваешь сам индекс-итератор, вместо
+    // того, чтобы сравнивать сами значения из массива, вытягивая их по индексу
+    // trafficLights[i] == 'red'.
+    // Плюс я хотел, чтобы ты не 4 шага сделал в цикле, а прогнал весь цикл (те 3 шага) 4 раза.
+    // Опять же у тебя в параметрах цикла стоит цифра 4 вместо использования
+    // trafficLights.length. Чтобы 4 раза прогнать цикл используй другой цикл.
+    // Вложи один цикл в другой, чтобы задача верхнего цикла было гонять нижний.
+    if (i == 2) {
+      print('true');
+    } else {
+      print('false');
+    }
+  }
+}
 
 void task3() {
   /*
@@ -185,6 +195,7 @@ void task3() {
 
   // Start your code here
   for (var product in warehouse) {
+    // TODO: Решение верное все ок, но попробуй также решение с switch.
     if (product == apple) {
       fruitStore.add(product);
     } else if (product == toothbrush) {
@@ -193,7 +204,7 @@ void task3() {
       furnitureStore.add(product);
     }
   }
-  print('Numbers of products in fruitStore: ${fruitStore.length}');
-  print('Numbers of products in cosmeticStore: ${cosmeticsStore.length}');
-  print('Numbers of products in furnitureStore: ${furnitureStore.length}');
+  print('Amount of products in fruitStore: ${fruitStore.length}');
+  print('Amount of products in cosmeticStore: ${cosmeticsStore.length}');
+  print('Amount of products in furnitureStore: ${furnitureStore.length}');
 }
