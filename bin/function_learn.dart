@@ -1,3 +1,5 @@
+import 'dart:svg';
+
 void main() {
   /**
    * Функция - это блок кода, который будет выполнен при вызове самой функции.
@@ -15,7 +17,7 @@ void main() {
    * Параметры можно указывать через запятую, например:
    * int getCount(List<String> names) {}
    * String concatenateStrings(String str1, String str2) {}
-   * 
+   *  
    * Как видим, данные функции должны возвращать int и String соответственно. По
    * названиям функции и параметрам должно быть понятно, что они сделают и что
    * вернут.
@@ -159,6 +161,12 @@ void task1() {
   это кол-во. Не забудь, что функция лишь возращает значение, но не печатает его.
   После вызова не забудь сделать принт полученного результата.
 */
+  //  String concatenateStrings(String str1, String str2) {}
+  int getCount(List<String> list) {
+    return list.length;
+  }
+
+  print(getCount);
 }
 
 void task2() {
@@ -166,4 +174,11 @@ void task2() {
    * Создать функцию, которая будет сращивать две строки в одну и возвращать 
    * полученную строку.
    */
+  String concatenateStrings(String str1, String str2) {
+    String str1 = 'str1';
+    String str2 = 'str2';
+    String result = str1 + str2;
+    print(result);
+  }
 }
+ // a tak eb &
