@@ -3,6 +3,7 @@
 import 'dart:math';
 
 void main() {
+  task2();
   /*
   Здарова. Здесь мы будем учить булеаны. Булеан – это тип данных в языке Dart.
   Записывается булеан в дарте как bool. Бул может хранить все всего два
@@ -144,7 +145,9 @@ void task2() {
   выведи в консоль true, когда водителю можно ехать, и false когда ехать нельзя.
   */
   List<String> trafficLights = ['red', 'orange', 'green'];
-  for (int i = 0; i < 3; i++) {
+  for (int i = 0;
+      i < 3 /* TODO: – сколько раз пробздится этот цикл, а сколько нужно?? */;
+      i++) {
     for (int j = 0; j < trafficLights.length; j++) {
       print(trafficLights[j]);
     }
@@ -163,49 +166,49 @@ void task2() {
 // trafficLights.length. Чтобы 4 раза прогнать цикл используй другой цикл.
 // Вложи один цикл в другой, чтобы задача верхнего цикла было гонять нижний.
 
-// void task3() {
-//   /*
-//   Тебя попросили написать программу, которую мы бы установили на аппарат на складе,
-//   отвечающий за сортировку продуктов. Программа, должна вычислять, какой продукт
-//   подается и распределять его в соответствующий магазин. В конце программа должна
-//   вывести в консоль количество продуктов в каждом магазине после распределения.
-//   */
-//   const apple = 'apple';
-//   const toothbrush = 'toothbrush';
-//   const couch = 'couch';
+void task3() {
+  /*
+  Тебя попросили написать программу, которую мы бы установили на аппарат на складе,
+  отвечающий за сортировку продуктов. Программа, должна вычислять, какой продукт
+  подается и распределять его в соответствующий магазин. В конце программа должна
+  вывести в консоль количество продуктов в каждом магазине после распределения.
+  */
+  const apple = 'apple';
+  const toothbrush = 'toothbrush';
+  const couch = 'couch';
 
-//   final warehouse = [
-//     apple,
-//     toothbrush,
-//     couch,
-//     couch,
-//     toothbrush,
-//     apple,
-//     apple,
-//     apple,
-//     toothbrush,
-//     apple,
-//     couch,
-//     couch,
-//     toothbrush,
-//     toothbrush
-//   ];
-//   final List<String> fruitStore = [];
-//   final List<String> cosmeticsStore = [];
-//   final List<String> furnitureStore = [];
+  final warehouse = [
+    apple,
+    toothbrush,
+    couch,
+    couch,
+    toothbrush,
+    apple,
+    apple,
+    apple,
+    toothbrush,
+    apple,
+    couch,
+    couch,
+    toothbrush,
+    toothbrush
+  ];
+  final List<String> fruitStore = [];
+  final List<String> cosmeticsStore = [];
+  final List<String> furnitureStore = [];
 
-//   // Start your code here
-//   for (var product in warehouse) {
-//     // TODO: Решение верное все ок, но попробуй также решение с switch.
-//     if (product == apple) {
-//       fruitStore.add(product);
-//     } else if (product == toothbrush) {
-//       cosmeticsStore.add(product);
-//     } else if (product == couch) {
-//       furnitureStore.add(product);
-//     }
-//   }
-//   print('Amount of products in fruitStore: ${fruitStore.length}');
-//   print('Amount of products in cosmeticStore: ${cosmeticsStore.length}');
-//   print('Amount of products in furnitureStore: ${furnitureStore.length}');
-// }
+  // Start your code here
+  for (var product in warehouse) {
+    // TODO: Решение верное все ок, но попробуй также решение с switch.
+    if (product == apple) {
+      fruitStore.add(product);
+    } else if (product == toothbrush) {
+      cosmeticsStore.add(product);
+    } else if (product == couch) {
+      furnitureStore.add(product);
+    }
+  }
+  print('Amount of products in fruitStore: ${fruitStore.length}');
+  print('Amount of products in cosmeticStore: ${cosmeticsStore.length}');
+  print('Amount of products in furnitureStore: ${furnitureStore.length}');
+}
