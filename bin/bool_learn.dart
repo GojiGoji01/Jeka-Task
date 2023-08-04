@@ -146,7 +146,7 @@ void task2() {
   */
   List<String> trafficLights = ['red', 'orange', 'green'];
   for (int i = 0;
-      i < trafficLights.length; /* TODO: – сколько раз пробздится этот цикл, а сколько нужно?? */;
+      i < trafficLights.length; /* TODO: – неверно */
       i++) {
     for (int j = 0; j < trafficLights.length; j++) {
       print(trafficLights[j]);
@@ -199,7 +199,6 @@ void task3() {
 
   // Start your code here
   for (var product in warehouse) {
-    // TODO: Решение верное все ок, но попробуй также решение с switch.
     switch (product) {
       case apple:
         fruitStore.add(product);
