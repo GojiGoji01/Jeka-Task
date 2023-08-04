@@ -170,15 +170,11 @@ void task1() {
 }
 
 void task2() {
-  /**
-   * Создать функцию, которая будет сращивать две строки в одну и возвращать 
-   * полученную строку.
-   */
+  // /**
+  //  * Создать функцию, которая будет сращивать две строки в одну и возвращать
+  //  * полученную строку.
+  //  */
   String concatenateStrings(String str1, String str2) {
-    String str1 = 'str1';
-    String str2 = 'str2';
-    String result = str1 + str2;
-    print(result);
+    return str1 + str2;
   }
 }
- // a tak eb &
