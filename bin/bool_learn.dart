@@ -3,7 +3,7 @@
 import 'dart:math';
 
 void main() {
-  task2();
+  task1();
   /*
   Здарова. Здесь мы будем учить булеаны. Булеан – это тип данных в языке Dart.
   Записывается булеан в дарте как bool. Бул может хранить все всего два
@@ -200,13 +200,26 @@ void task3() {
   // Start your code here
   for (var product in warehouse) {
     // TODO: Решение верное все ок, но попробуй также решение с switch.
-    if (product == apple) {
-      fruitStore.add(product);
-    } else if (product == toothbrush) {
-      cosmeticsStore.add(product);
-    } else if (product == couch) {
-      furnitureStore.add(product);
+    switch (product) {
+      case apple:
+        fruitStore.add(product);
+        break;
+      case toothbrush:
+        cosmeticsStore.add(product);
+        break;
+      case couch:
+        furnitureStore.add(product);
+        break;
+      default:
+        break;
     }
+    // if (product == apple) {
+    //   fruitStore.add(product);
+    // } else if (product == toothbrush) {
+    //   cosmeticsStore.add(product);
+    // } else if (product == couch) {
+    //   furnitureStore.add(product);
+    // }
   }
   print('Amount of products in fruitStore: ${fruitStore.length}');
   print('Amount of products in cosmeticStore: ${cosmeticsStore.length}');
