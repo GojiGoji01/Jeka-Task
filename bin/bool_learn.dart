@@ -146,7 +146,7 @@ void task2() {
   */
   List<String> trafficLights = ['red', 'orange', 'green'];
   for (int i = 0;
-      i < trafficLights.length; /* TODO: – неверно */
+      i < 4; /* TODO: – неверно */
       i++) {
     for (int j = 0; j < trafficLights.length; j++) {
       print(trafficLights[j]);
