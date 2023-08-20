@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:app_coms/app_coms.dart' as app_coms;
 import 'dart:collection';
 
 import 'package:collection/collection.dart';
