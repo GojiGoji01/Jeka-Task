@@ -8,7 +8,7 @@ void main() {
   3мя основными принципами:
     1. Наследование – позволяет наследовать классы, создавая дочерний класс.
     Такой класс заимствует все поля и методы родительского класса, позволяя 
-    расширить функционал дочернего класса, добавив туда уникальные методы и поля.
+    расширить функционал родительского класса, добавив туда уникальные методы и поля.
     2. Инкапсуляция – также известное как сокрытие данных. Данный принцип отвечает
     за то, какие поля и методы должны быть скрыты для внешнего интерфейса (то есть
     вне самого класса), а какие открыты.
@@ -100,9 +100,10 @@ class Triangle extends Shape {
 
 class Human {
   String name;
-  String gen;
+  Gender gen;
   int age;
-  bool hasRelationships = false;
+  Human? relationship;
+
   Human(this.name, this.age, this.gen);
 
   void greet() {
@@ -110,10 +111,10 @@ class Human {
   }
 
   void startRelationships(Human otherHuman) {
-    if (gen != otherHuman.gen && !otherHuman.hasRelationships) {
+    if (gen != otherHuman.gen && relationship == null) {
       print(' $name начал отношения s  ${otherHuman.name}');
-      hasRelationships = true;
-      otherHuman.hasRelationships = true;
+      relationship = otherHuman;
+      otherHuman.relationship = this;
     } else {
       if (gen == otherHuman.gen) {
         print('${otherHuman.name} is gay');
@@ -124,26 +125,21 @@ class Human {
   }
 
   void endRelationships() {
-    if (hasRelationships) {
+    if (relationship != null) {
       print('$name разорвал отношения');
     } else {
       print('$name не состоит в отношения');
     }
-    hasRelationships = false;
-  }
-
-  void broddyFuckedUp(Human otherHuman) {
-    if (gen == otherHuman.gen) {
-      print('${otherHuman.name} is gay');
-    }
+    relationship?.relationship = null;
+    relationship = null;
   }
 }
 
 void task1() {
-  var human1 = Human('Bob', 29, 'male');
-  var human2 = Human('Any', 27, 'Female');
-  var human3 = Human('Brody', 27, 'male');
-  var human4 = Human('Dabby', 24, 'Female');
+  var human1 = Human('Bob', 29, Gender.male);
+  var human2 = Human('Any', 27, Gender.female);
+  var human3 = Human('Brody', 27, Gender.male);
+  var human4 = Human('Dabby', 24, Gender.female);
   human1.greet();
   human2.greet();
   human3.greet();
@@ -157,7 +153,12 @@ void task1() {
 
   human3.startRelationships(human1);
   human1.startRelationships(human3);
-} 
+}
+
+enum Gender {
+  male,
+  female;
+}
 
   /*
 
