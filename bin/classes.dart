@@ -1,6 +1,7 @@
 import 'dart:math';
 
 void main() {
+  task1();
   /*
   Классы - это шаблоны объектов, содержащих в себе поля (переменные) и методы (функции).
   Классы это база в объектно-ориентированном программировании (ООП). ООП характеризуется
@@ -97,8 +98,69 @@ class Triangle extends Shape {
   final bool isEquilateral;
 }
 
+class Human {
+  String name;
+  String gen;
+  int age;
+  bool hasRelationships = false;
+  Human(this.name, this.age, this.gen);
+
+  void greet() {
+    print('привет, $name');
+  }
+
+  void startRelationships(Human otherHuman) {
+    if (gen != otherHuman.gen && !otherHuman.hasRelationships) {
+      print(' $name начал отношения s  ${otherHuman.name}');
+      hasRelationships = true;
+      otherHuman.hasRelationships = true;
+    } else {
+      if (gen == otherHuman.gen) {
+        print('${otherHuman.name} is gay');
+      } else {
+        print('извините ${otherHuman.name} уже состоит в отношениях');
+      }
+    }
+  }
+
+  void endRelationships() {
+    if (hasRelationships) {
+      print('$name разорвал отношения');
+    } else {
+      print('$name не состоит в отношения');
+    }
+    hasRelationships = false;
+  }
+
+  void broddyFuckedUp(Human otherHuman) {
+    if (gen == otherHuman.gen) {
+      print('${otherHuman.name} is gay');
+    }
+  }
+}
+
 void task1() {
+  var human1 = Human('Bob', 29, 'male');
+  var human2 = Human('Any', 27, 'Female');
+  var human3 = Human('Brody', 27, 'male');
+  var human4 = Human('Dabby', 24, 'Female');
+  human1.greet();
+  human2.greet();
+  human3.greet();
+
+  human1.startRelationships(human2);
+  human1.endRelationships();
+  human2.endRelationships();
+  human4.greet();
+  human3.startRelationships(human4);
+  human3.endRelationships();
+
+  human3.startRelationships(human1);
+  human1.startRelationships(human3);
+} 
+
   /*
+
   Необходимо создать класс Человек с параметрами: имя, пол, возраст, и методами:
   поприветствовать, который будет выводить в консоль Привет, [Имя другого человека]!.
 
@@ -108,6 +170,5 @@ void task1() {
   в консоль причину отказа (пол или наличие отношений).
 
   Также создать функцию "разорвать отношения", которая разрывает текущие отношения,
-  если таковые имеются.
+  если таковые имеются. 
    */
-}
