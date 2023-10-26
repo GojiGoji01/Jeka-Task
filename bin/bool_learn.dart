@@ -127,16 +127,6 @@ void task1() {
   Напечатать '2', если rnd лежит между x и y.
   Напечатать '3', если rnd лежит перед х.
   */
-  final x = 30;
-  final y = 70;
-  final rnd = Random().nextInt(100);
-  if (rnd > y) {
-    print('1');
-  } else if (x < rnd && rnd < y) {
-    print('2');
-  } else {
-    print('3');
-  }
 }
 
 void task2() {
@@ -144,17 +134,6 @@ void task2() {
   Создай массив со всеми цветами светофора. Пройдись 4 раза по всему массиву, и
   выведи в консоль true, когда водителю можно ехать, и false когда ехать нельзя.
   */
-  List<String> trafficLights = ['red', 'orange', 'green'];
-  for (int i = 0; i < 4; i++) {
-    for (int j = 0; j < trafficLights.length; j++) {
-      print(trafficLights[j]);
-    }
-    if (i == 2) {
-      print('true');
-    } else {
-      print('false');
-    }
-  }
 }
 
 void task3() {
@@ -164,54 +143,4 @@ void task3() {
   подается и распределять его в соответствующий магазин. В конце программа должна
   вывести в консоль количество продуктов в каждом магазине после распределения.
   */
-  const apple = 'apple';
-  const toothbrush = 'toothbrush';
-  const couch = 'couch';
-
-  final warehouse = [
-    apple,
-    toothbrush,
-    couch,
-    couch,
-    toothbrush,
-    apple,
-    apple,
-    apple,
-    toothbrush,
-    apple,
-    couch,
-    couch,
-    toothbrush,
-    toothbrush
-  ];
-  final List<String> fruitStore = [];
-  final List<String> cosmeticsStore = [];
-  final List<String> furnitureStore = [];
-
-  // Start your code here
-  for (var product in warehouse) {
-    switch (product) {
-      case apple:
-        fruitStore.add(product);
-        break;
-      case toothbrush:
-        cosmeticsStore.add(product);
-        break;
-      case couch:
-        furnitureStore.add(product);
-        break;
-      default:
-        break;
-    }
-    // if (product == apple) {
-    //   fruitStore.add(product);
-    // } else if (product == toothbrush) {
-    //   cosmeticsStore.add(product);
-    // } else if (product == couch) {
-    //   furnitureStore.add(product);
-    // }
-  }
-  print('Amount of products in fruitStore: ${fruitStore.length}');
-  print('Amount of products in cosmeticStore: ${cosmeticsStore.length}');
-  print('Amount of products in furnitureStore: ${furnitureStore.length}');
 }

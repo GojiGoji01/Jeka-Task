@@ -98,70 +98,8 @@ class Triangle extends Shape {
   final bool isEquilateral;
 }
 
-class Human {
-  String name;
-  Gender gen;
-  int age;
-  Human? relationship;
-
-  Human(this.name, this.age, this.gen);
-
-  void greet() {
-    print('привет, $name');
-  }
-
-  void startRelationships(Human otherHuman) {
-    if (gen != otherHuman.gen && relationship == null) {
-      print(' $name начал отношения s  ${otherHuman.name}');
-      relationship = otherHuman;
-      otherHuman.relationship = this;
-    } else {
-      if (gen == otherHuman.gen) {
-        print('${otherHuman.name} is gay');
-      } else {
-        print('извините ${otherHuman.name} уже состоит в отношениях');
-      }
-    }
-  }
-
-  void endRelationships() {
-    if (relationship != null) {
-      print('$name разорвал отношения');
-    } else {
-      print('$name не состоит в отношения');
-    }
-    relationship?.relationship = null;
-    relationship = null;
-  }
-}
-
 void task1() {
-  var human1 = Human('Bob', 29, Gender.male);
-  var human2 = Human('Any', 27, Gender.female);
-  var human3 = Human('Brody', 27, Gender.male);
-  var human4 = Human('Dabby', 24, Gender.female);
-  human1.greet();
-  human2.greet();
-  human3.greet();
-
-  human1.startRelationships(human2);
-  human1.endRelationships();
-  human2.endRelationships();
-  human4.greet();
-  human3.startRelationships(human4);
-  human3.endRelationships();
-
-  human3.startRelationships(human1);
-  human1.startRelationships(human3);
-}
-
-enum Gender {
-  male,
-  female;
-}
-
-/*
-
+  /*
   Необходимо создать класс Человек с параметрами: имя, пол, возраст, и методами:
   поприветствовать, который будет выводить в консоль Привет, [Имя другого человека]!.
 
@@ -173,5 +111,4 @@ enum Gender {
   Также создать функцию "разорвать отношения", которая разрывает текущие отношения,
   если таковые имеются. 
    */
-
-abstract class GameObject {}
+}
