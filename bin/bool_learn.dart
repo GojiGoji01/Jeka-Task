@@ -177,10 +177,11 @@ void task3() {
   подается и распределять его в соответствующий магазин. В конце программа должна
   вывести в консоль количество продуктов в каждом магазине после распределения.
   */
-  final         unsorted = ['appleJuice','salmon', 'fries', 'salmon', 'appleJuice','apple', 'journal','salmon','appleJuice', 'fries'];
-  Set<String>   production = Set.from(unsorted);
-  int           productionAmount = 0;
-  int           iteration = 0;
+  final            unsorted = ['appleJuice','salmon', 'fries', 'salmon', 'appleJuice','apple', 'journal','salmon','appleJuice', 'fries'];
+  Set<String>      production = Set.from(unsorted);
+  Map<String, int> productionCount= Map.fromEntries();
+  int              productionAmount = 0;
+  int              iteration = 0;
 
   for (int i = 0; i < production.length; i++){
     while(iteration < unsorted.length){
@@ -190,7 +191,7 @@ void task3() {
       iteration++;
       print(productionAmount);
     }
-    print(production);
+    print(production[1]);
     productionAmount = 0;
     iteration = 0;
 }
