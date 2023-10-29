@@ -1,9 +1,10 @@
 // import 'dart:math';
 
+import 'dart:ffi';
 import 'dart:math';
 
 void main() {
-  task1();
+  task3();
   /*
   Здарова. Здесь мы будем учить булеаны. Булеан – это тип данных в языке Dart.
   Записывается булеан в дарте как bool. Бул может хранить все всего два
@@ -31,7 +32,7 @@ void main() {
       } else {
         doAnother();
       }
-
+-
       ––––––––––––––––––––––––
       final x = 2;
       final y = 5;
@@ -80,7 +81,7 @@ void main() {
       A || B = false;
 
       Также в алгебре логики есть оператор отрицания – НЕ, в записи языка Dart
-      мы записываем ! перед выражение или переменной, возвращающими bool. Например:
+      мы записываем ! перед выражением\* или переменной, возвращающими bool. Например:
       bool a = true;
       print(a); <-- печатается true;
       print(!a); <-- печатается false;
@@ -127,6 +128,19 @@ void task1() {
   Напечатать '2', если rnd лежит между x и y.
   Напечатать '3', если rnd лежит перед х.
   */
+  var y = 0;
+  var x = 1;
+  var rnd = -1;
+  
+  if (rnd > y){
+    print(1);
+  }
+  else if (rnd > x && rnd < y){
+    print(2);
+  }
+  else if (rnd < x){
+    print(3);
+  }
 }
 
 void task2() {
@@ -134,7 +148,27 @@ void task2() {
   Создай массив со всеми цветами светофора. Пройдись 4 раза по всему массиву, и
   выведи в консоль true, когда водителю можно ехать, и false когда ехать нельзя.
   */
-}
+  var cvetaSvetofora = {
+    0 : 'зеленый',
+    1 : 'мигающий зеленый', 
+    2 : 'желтый', 
+    3 : 'красный'};
+
+  for (int i = 0; i < 4; i++){
+      if (cvetaSvetofora[i] == 'зеленый'){
+        print('Спокойно двигай вперед.');
+      }
+      else if (cvetaSvetofora[i] == 'мигающий зеленый'){
+        print('Если сфетофор близко - втопи по полной (но не больше 79 км/ч.)');
+      }
+      else if (cvetaSvetofora[i] == 'желтый'){
+        print('По хорошему тормози, если сможешь перед стоп линией встать.');
+      }
+      else if (cvetaSvetofora[i] == 'красный'){
+        print('Проскочешь на красный с камерой - выклыдвай 5к!');
+      }
+    }
+  }
 
 void task3() {
   /*
@@ -143,4 +177,24 @@ void task3() {
   подается и распределять его в соответствующий магазин. В конце программа должна
   вывести в консоль количество продуктов в каждом магазине после распределения.
   */
+  final         unsorted = ['appleJuice','salmon', 'fries', 'salmon', 'appleJuice','apple', 'journal','salmon','appleJuice', 'fries'];
+  Set<String>   production = Set.from(unsorted);
+  int           productionAmount = 0;
+  int           iteration = 0;
+
+  for (int i = 0; i < production.length; i++){
+    while(iteration < unsorted.length){
+      if (production == unsorted[iteration]){
+        productionAmount++;
+      }
+      iteration++;
+      print(productionAmount);
+    }
+    print(production);
+    productionAmount = 0;
+    iteration = 0;
+}
+  /*for (int i = 0; i < unsorted.length; i++){
+    unsortedEntries.add(unsorted[i]);
+  }*/
 }
