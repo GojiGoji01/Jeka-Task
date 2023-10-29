@@ -170,6 +170,11 @@ void task2() {
     }
   }
 
+int  task3NumberGenerter(int i)
+{
+  return (0);
+}
+
 void task3() {
   /*
   Тебя попросили написать программу, которую мы бы установили на аппарат на складе,
@@ -177,25 +182,16 @@ void task3() {
   подается и распределять его в соответствующий магазин. В конце программа должна
   вывести в консоль количество продуктов в каждом магазине после распределения.
   */
-  final            unsorted = ['appleJuice','salmon', 'fries', 'salmon', 'appleJuice','apple', 'journal','salmon','appleJuice', 'fries'];
+  final            unsorted = ['appleJuice', 'salmon', 'fries', 'salmon', 'appleJuice','apple', 'journal','salmon', 'appleJuice'];
   Set<String>      production = Set.from(unsorted);
-  Map<String, int> productionCount= Map.fromEntries();
-  int              productionAmount = 0;
-  int              iteration = 0;
+  List<int>        productionCount = List.filled(production.length, 0);
+  Map<String, int> productionCountMap= Map.fromIterables(production, productionCount);
+  int              currentCount = 0; 
+  int              i = -1;
 
-  for (int i = 0; i < production.length; i++){
-    while(iteration < unsorted.length){
-      if (production == unsorted[iteration]){
-        productionAmount++;
-      }
-      iteration++;
-      print(productionAmount);
-    }
-    print(production[1]);
-    productionAmount = 0;
-    iteration = 0;
-}
-  /*for (int i = 0; i < unsorted.length; i++){
-    unsortedEntries.add(unsorted[i]);
-  }*/
+  while (++i < unsorted.length){
+    currentCount = (productionCountMap[unsorted[i]] as int) + 1;
+    productionCountMap[unsorted[i]] = currentCount;
+  }
+  print(productionCountMap);
 }
