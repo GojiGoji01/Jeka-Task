@@ -19,7 +19,7 @@ void main() {
     Рассмотрим класс Shape.
   */
 
-  // создаем экземпляр класса Shape
+  /*// создаем экземпляр класса Shape
   final squaredShape = Shape(sidesCount: 4, area: 16);
   print(
       '${squaredShape.runtimeType}: sides – ${squaredShape.sidesCount}, area – ${squaredShape.area}');
@@ -37,7 +37,7 @@ void main() {
   print(
       '${triangle.runtimeType}: area – ${triangle.area}, sides – ${triangle.sidesCount}');
 
-  // Реши задачу task1
+  // Реши задачу task1*/
 }
 
 /// классы в дарте всегда определяются вне всяких функций
@@ -111,4 +111,42 @@ void task1() {
   Также создать функцию "разорвать отношения", которая разрывает текущие отношения,
   если таковые имеются. 
    */
+  human male = human('Игорь', 'мужчина', 18);
+  human female = human('Наташа', 'мужчина', 28);
+
+  male.salutation(female);
+  male.startRelationship(female);
+}
+
+class human{
+  final String name;
+  final String sex;
+  final int    age;
+  bool         relationshipStatus = false;
+
+  human(
+    this.name,
+    this.sex,
+    this.age
+  );
+
+  void  salutation(human another){
+    print('Привет, ${another.name}!');
+  }
+  void  startRelationship(human another){
+    if (another.relationshipStatus == false && this.relationshipStatus == false && another.sex != this.sex){
+      this.relationshipStatus = true;
+      another.relationshipStatus = true;
+      print('${this.name} и ${another.name} вступают в отношения!');
+    }
+    else if (another.relationshipStatus == true){
+      print('${another.name} уже состоит в отношениях!');
+    }
+    else if (this.relationshipStatus == true){
+      print('${this.name} уже состоит в отношениях!');
+    }
+    else if (another.sex == this.sex){
+      print('${this.name} и ${another.name} не могут состоять в отношениях, они одного пола!');
+    }
+  }
 }
