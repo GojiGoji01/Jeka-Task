@@ -113,11 +113,12 @@ void task1() {
   Также создать функцию "разорвать отношения", которая разрывает текущие отношения,
   если таковые имеются. 
    */
-  var male    = Human('Игорь', 'мужчина', 18);
-  var female  = Human('Наташа', 'женщина', 28);
+  var male    = Human('Игорь', Sex.male, 18);
+  var female  = Human('Наташа', Sex.female, 28);
 
   male.salutation(female);
   male.startRelationship(female);
+  male.stopRelationship(female);
 }
 
 class Human{
@@ -140,6 +141,7 @@ class Human{
     if (relationshipStatus == another){
       relationshipStatus = null;
       another.relationshipStatus = null;
+      print('$name и ${another.name} расстались!');
     }
     else
       print('$name и ${another.name} не состоят в отношениях!');
@@ -161,4 +163,9 @@ class Human{
       print('$name и ${another.name} не могут состоять в отношениях, они одного пола!');
     }
   }
+}
+
+enum  Sex{
+  male,
+  female
 }
