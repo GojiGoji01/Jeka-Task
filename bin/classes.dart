@@ -114,26 +114,16 @@ void task1() {
   var male = Human('Игорь', Sex.male, 18);
   var female = Human('Наташа', Sex.female, 28);
 
-  // JEKA: – создаю такую переменную и отправляю ее в stopRelationship
-  // код крашнется, подумай почему и поправь
-  var another = 123;
-  male.stopRelationship(another);
-
   male.salutation(female);
   male.stopRelationship(female);
 }
 
 class Human {
-  // JEKA: – нужно указывать явно тип, иначе я могу в эти три поля положить
-  // переменные любого типа и все функции крашнутся
-  final name;
-  final sex;
-  final age;
+  final String name;
+  final Sex sex;
+  final int age;
 
-  // JEKA: – Не ошибка, но линтер жалуется, тк необязательно nullable переменную
-  // инитить null'ом. Если написать Human? someHuman; -> это тоже самое, она
-  // по умолчанию будет null;
-  Human? relationshipStatus = null;
+  Human? relationshipStatus;
 
   Human(this.name, this.sex, this.age);
 
@@ -141,7 +131,7 @@ class Human {
     print('Привет, ${another.name}!');
   }
 
-  void stopRelationship(var another) {
+  void stopRelationship(Human another) {
     if (relationshipStatus == another) {
       relationshipStatus = null;
       another.relationshipStatus = null;
@@ -160,8 +150,7 @@ class Human {
       print('$name и ${another.name} вступают в отношения!');
     } else if (another.relationshipStatus != null) {
       print('${another.name} уже состоит в отношениях!');
-      // JEKA: – опять лишний this. Настрой пж линтер
-    } else if (this.relationshipStatus != null) {
+    } else if (relationshipStatus != null) {
       print('$name уже состоит в отношениях!');
     } else if (another.sex == sex) {
       print(
@@ -171,3 +160,5 @@ class Human {
 }
 
 enum Sex { male, female }
+
+void function() {}
