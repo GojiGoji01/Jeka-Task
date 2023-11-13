@@ -1,5 +1,3 @@
-import 'dart:collection';
-import 'dart:ffi';
 import 'dart:math';
 
 void main() {
@@ -113,59 +111,63 @@ void task1() {
   Также создать функцию "разорвать отношения", которая разрывает текущие отношения,
   если таковые имеются. 
    */
-  var male    = Human('Игорь', Sex.male, 18);
-  var female  = Human('Наташа', Sex.female, 28);
+  var male = Human('Игорь', Sex.male, 18);
+  var female = Human('Наташа', Sex.female, 28);
+
+  // JEKA: – создаю такую переменную и отправляю ее в stopRelationship
+  // код крашнется, подумай почему и поправь
+  var another = 123;
+  male.stopRelationship(another);
 
   male.salutation(female);
-  male.startRelationship(female);
   male.stopRelationship(female);
 }
 
-class Human{
-  final   name;
-  final   sex;
-  final   age;
-  Human?  relationshipStatus = null;
+class Human {
+  // JEKA: – нужно указывать явно тип, иначе я могу в эти три поля положить
+  // переменные любого типа и все функции крашнутся
+  final name;
+  final sex;
+  final age;
 
-  Human(
-    this.name,
-    this.sex,
-    this.age
-  );
+  // JEKA: – Не ошибка, но линтер жалуется, тк необязательно nullable переменную
+  // инитить null'ом. Если написать Human? someHuman; -> это тоже самое, она
+  // по умолчанию будет null;
+  Human? relationshipStatus = null;
 
-  void  salutation(Human another){
+  Human(this.name, this.sex, this.age);
+
+  void salutation(Human another) {
     print('Привет, ${another.name}!');
   }
 
-  void stopRelationship(var another){
-    if (relationshipStatus == another){
+  void stopRelationship(var another) {
+    if (relationshipStatus == another) {
       relationshipStatus = null;
       another.relationshipStatus = null;
       print('$name и ${another.name} расстались!');
-    }
-    else
+    } else {
       print('$name и ${another.name} не состоят в отношениях!');
+    }
   }
-  
-  void  startRelationship(Human another){
-    if (another.relationshipStatus == null && relationshipStatus == null && another.sex != sex){
+
+  void startRelationship(Human another) {
+    if (another.relationshipStatus == null &&
+        relationshipStatus == null &&
+        another.sex != sex) {
       relationshipStatus = another;
       another.relationshipStatus = this;
       print('$name и ${another.name} вступают в отношения!');
-    }
-    else if (another.relationshipStatus != null){
+    } else if (another.relationshipStatus != null) {
       print('${another.name} уже состоит в отношениях!');
-    }
-    else if (this.relationshipStatus != null){
+      // JEKA: – опять лишний this. Настрой пж линтер
+    } else if (this.relationshipStatus != null) {
       print('$name уже состоит в отношениях!');
-    }
-    else if (another.sex == sex){
-      print('$name и ${another.name} не могут состоять в отношениях, они одного пола!');
+    } else if (another.sex == sex) {
+      print(
+          '$name и ${another.name} не могут состоять в отношениях, они одного пола!');
     }
   }
 }
 
-enum  Sex{
-  male,
-  female
-}
+enum Sex { male, female }
