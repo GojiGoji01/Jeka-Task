@@ -1,8 +1,5 @@
 // import 'dart:math';
 
-import 'dart:ffi';
-import 'dart:math';
-
 void main() {
   task3();
   /*
@@ -131,14 +128,12 @@ void task1() {
   var y = 0;
   var x = 1;
   var rnd = -1;
-  
-  if (rnd > y){
+
+  if (rnd > y) {
     print(1);
-  }
-  else if (rnd > x && rnd < y){
+  } else if (rnd > x && rnd < y) {
     print(2);
-  }
-  else if (rnd < x){
+  } else if (rnd < x) {
     print(3);
   }
 }
@@ -149,26 +144,24 @@ void task2() {
   выведи в консоль true, когда водителю можно ехать, и false когда ехать нельзя.
   */
   var cvetaSvetofora = {
-    0 : 'зеленый',
-    1 : 'мигающий зеленый', 
-    2 : 'желтый', 
-    3 : 'красный'};
+    0: 'зеленый',
+    1: 'мигающий зеленый',
+    2: 'желтый',
+    3: 'красный'
+  };
 
-  for (int i = 0; i < 4; i++){
-      if (cvetaSvetofora[i] == 'зеленый'){
-        print('Спокойно двигай вперед.');
-      }
-      else if (cvetaSvetofora[i] == 'мигающий зеленый'){
-        print('Если сфетофор близко - втопи по полной (но не больше 79 км/ч.)');
-      }
-      else if (cvetaSvetofora[i] == 'желтый'){
-        print('По хорошему тормози, если сможешь перед стоп линией встать.');
-      }
-      else if (cvetaSvetofora[i] == 'красный'){
-        print('Проскочешь на красный с камерой - выклыдвай 5к!');
-      }
+  for (int i = 0; i < 4; i++) {
+    if (cvetaSvetofora[i] == 'зеленый') {
+      print('Спокойно двигай вперед.');
+    } else if (cvetaSvetofora[i] == 'мигающий зеленый') {
+      print('Если сфетофор близко - втопи по полной (но не больше 79 км/ч.)');
+    } else if (cvetaSvetofora[i] == 'желтый') {
+      print('По хорошему тормози, если сможешь перед стоп линией встать.');
+    } else if (cvetaSvetofora[i] == 'красный') {
+      print('Проскочешь на красный с камерой - выклыдвай 5к!');
     }
   }
+}
 
 void task3() {
   /*
@@ -177,14 +170,25 @@ void task3() {
   подается и распределять его в соответствующий магазин. В конце программа должна
   вывести в консоль количество продуктов в каждом магазине после распределения.
   */
-  final            unsorted = ['appleJuice', 'salmon', 'fries', 'salmon', 'appleJuice','apple', 'journal','salmon', 'appleJuice'];
-  Set<String>      production = Set.from(unsorted);
-  List<int>        productionCount = List.filled(production.length, 0);
-  Map<String, int> productionCountMap= Map.fromIterables(production, productionCount);
-  int              currentCount = 0; 
-  int              i = -1;
+  final unsorted = [
+    'appleJuice',
+    'salmon',
+    'fries',
+    'salmon',
+    'appleJuice',
+    'apple',
+    'journal',
+    'salmon',
+    'appleJuice'
+  ];
+  Set<String> production = Set.from(unsorted);
+  List<int> productionCount = List.filled(production.length, 0);
+  Map<String, int> productionCountMap =
+      Map.fromIterables(production, productionCount);
+  int currentCount = 0;
+  int i = -1;
 
-  while (++i < unsorted.length){
+  while (++i < unsorted.length) {
     currentCount = (productionCountMap[unsorted[i]] as int) + 1;
     productionCountMap[unsorted[i]] = currentCount;
   }

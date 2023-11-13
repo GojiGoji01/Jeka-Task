@@ -5,9 +5,11 @@ Future<void> main() async {
 }
 
 Future<String> loadGeorge() async {
+  await Future.delayed(Duration(milliseconds: 100));
   return 'George';
 }
 
 Future<String> loadJeka() async {
+  await Future.delayed(Duration(milliseconds: 105));
   return 'Jeka';
 }
