@@ -1,5 +1,3 @@
-import 'dart:collection';
-import 'dart:ffi';
 import 'dart:math';
 
 void main() {
@@ -122,15 +120,15 @@ void task1() {
 }
 
 class Human{
-  final   name;
-  final   sex;
-  final   age;
-  Human?  relationshipStatus = null;
+  final String   name;
+  final Sex  sex;
+  final int  age;
+  Human?  relationshipStatus;
 
   Human(
     this.name,
     this.sex,
-    this.age
+    this.age,
   );
 
   void  salutation(Human another){
@@ -143,8 +141,9 @@ class Human{
       another.relationshipStatus = null;
       print('$name и ${another.name} расстались!');
     }
-    else
+    else{
       print('$name и ${another.name} не состоят в отношениях!');
+    }
   }
   
   void  startRelationship(Human another){
@@ -156,7 +155,7 @@ class Human{
     else if (another.relationshipStatus != null){
       print('${another.name} уже состоит в отношениях!');
     }
-    else if (this.relationshipStatus != null){
+    else if (relationshipStatus != null){
       print('$name уже состоит в отношениях!');
     }
     else if (another.sex == sex){
