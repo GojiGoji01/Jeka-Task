@@ -1,8 +1,3 @@
-// import 'dart:js';
-
-import 'dart:collection';
-import 'dart:ffi';
-
 Future<void> main() async {
   // bool isHardLevel = true;
   // if (isHardLevel) {
@@ -144,6 +139,27 @@ final class TestUser extends User {
 
 // <––––––––––––––––––––––––– KIRILL TASKS –––––––––––––––––––––––––>
 
+sealed class AccountFailure implements Exception {}
+
+final class UnknownFailure extends AccountFailure {}
+
+final class NotFoundFailure extends AccountFailure {}
+
+final class ForbiddenFailure extends AccountFailure {}
+
+void a() {
+  final AccountFailure failure = NotFoundFailure();
+
+  switch (failure) {
+    case UnknownFailure():
+      print('');
+    case NotFoundFailure():
+      print('');
+    case ForbiddenFailure():
+      print('');
+  }
+}
+
 final class StartRelationshipException implements Exception {
   // не понимаю для чего тут надо использовать ключевое слово "final"
   const StartRelationshipException(this.human1, this.human2);
@@ -212,6 +228,10 @@ Future<void> task1() async {
 
   igor.salutation(kate);
   try {
+    /*
+    await не используем вместе с .then, .catchError
+    Внизу пример двух корректный, но разный реализаций с объяснением
+    */
     await igor
         .startRelationship(kate)
         .then((value) => null)
@@ -222,18 +242,41 @@ Future<void> task1() async {
   } catch (e) {
     print(e);
   }
-  // try {
-  //   igor.stopRelationship(kate);
-  // } catch (e) {
-  //   print(e);
-  // }
   try {
-    igor.stopRelationship(kate);
+    // так как мы используем await для выполнения Future, значит, что мы
+    // требуем Future выполниться синхронно и будем ожидать его выполнения и
+    // возврата значения (или выброса ошибки). В таком случае, чтобы отловить
+    // возможные ошибки мы оборачиваем вызов в блок try-catch, где в catch'е
+    // мы и ловим эксепшены
+
+    // Вызов
+    await igor.startRelationship(kate);
+
+    // В случае если await выполнится успешно, то выполнится эта строчка
+    print('success');
   } catch (e) {
+    // В противном случае мы проваливаемся в блок catch где у нас есть доступ
+    // к выброшенному эксепшену
     print(e);
   }
-  igor.startRelationship(kate).then((value) => null).catchError((error) {
-    print(error);
+
+  // 2 вариант без использования await
+
+  // Во-первых, никакого await, а значит, что функцию начинаем свое выполнение
+  // параллельно с остальными командами в вызывающей функции
+  igor
+      .startRelationship(kate)
+      // задаем блок then, который выполнится после успешного выполнения Future
+      .then(
+    (_) {
+      // название параметра прочерк, так как Future возвращает void.
+      print('success');
+    },
+    // определяем блок ошибки, который будет вызван в случае, если Future
+    // выбросил эксепшн
+  ).catchError((e) {
+    print('Не удалость начать отношения между ${igor.name} и ${kate.name}');
+    print(e);
   });
 }
 
@@ -250,12 +293,22 @@ abstract base class Human {
   }
 
   Future<void> startRelationship(Human another) async {
-    final delay = await Future.delayed(Duration(seconds: 2), (() => null));
+    /*
+    для делэя достаточно просто вызвать синхронно через await Future.delayed()
+    и все, прога зависнет на время длительности. Фактически, это Future в котором
+    функция с таймером на время, когда время закончится Future уведомляет вызывающую
+    функцию о своем успешном выполнении
+     */
+    await Future.delayed(const Duration(seconds: 2));
+    // final delay = await Future.delayed(Duration(seconds: 2), (() => null));
     if (another.relationshipStatus == null &&
         relationshipStatus == null &&
         another.sex != sex) {
       relationshipStatus = another;
       another.relationshipStatus = this;
+      // Здесь можно не выбрасывать такой эксепшн, так как вызвав данную
+      // Future функцию (startRelationship), мы будем знать, что она удачно
+      // выполнилась когда не вылетел ни один эксепшн
       throw StartRelationshipException(this, another);
     } else if (another.relationshipStatus != null) {
       throw AlreadyStartedRelationshipException(another);
@@ -264,7 +317,9 @@ abstract base class Human {
     } else if (another.sex == sex) {
       throw SameSexException(this, another);
     }
-    return delay;
+    // у тебя функция void соответственно необязательно что-то возвращать,
+    // тем более этот delay.
+    // return delay;
   }
 
   Future<void> stopRelationship(Human another) {
