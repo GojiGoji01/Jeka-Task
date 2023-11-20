@@ -160,18 +160,6 @@ void a() {
   }
 }
 
-final class StartRelationshipException implements Exception {
-  // не понимаю для чего тут надо использовать ключевое слово "final"
-  const StartRelationshipException(this.human1, this.human2);
-  // не понимаю для чего тут надо использовать ключевое слово "const"
-
-  final Human human1;
-  final Human human2;
-
-  @override
-  String toString() => '${human1.name} и ${human2.name} начали встречаться!';
-}
-
 final class AlreadyStartedRelationshipException implements Exception {
   const AlreadyStartedRelationshipException(this.human);
 
@@ -309,7 +297,7 @@ abstract base class Human {
       // Здесь можно не выбрасывать такой эксепшн, так как вызвав данную
       // Future функцию (startRelationship), мы будем знать, что она удачно
       // выполнилась когда не вылетел ни один эксепшн
-      throw StartRelationshipException(this, another);
+      print('$name и ${another.name} начали встречаться!');
     } else if (another.relationshipStatus != null) {
       throw AlreadyStartedRelationshipException(another);
     } else if (relationshipStatus != null) {
