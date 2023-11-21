@@ -20,9 +20,12 @@ Future<void> main() async {
    */
 
   final service = RandomNameService();
-  final names = await service.loadNames(amount: 10);
-
-  print(names);
+  try {
+    final names = await service.loadNames(amount: -1);
+    print(names);
+  } on HttpException catch (e) {
+    print(e.toString());
+  }
 }
 
 sealed class HttpException implements Exception {
@@ -60,7 +63,6 @@ final class RandomNameService implements IRandomNameService {
         headers: {
           'x-api-key': 'f8f010f6e888495dbce7cc9c02c6cd65',
         });
-    // Вынеси это в функцию _handleError
     _handleError(response.statusCode);
 
     final list = jsonDecode(response.body) as List;
@@ -69,48 +71,30 @@ final class RandomNameService implements IRandomNameService {
 
   @override
   Future<List<String>> loadNames({required int amount}) async {
-    List<String> list = List.empty(growable: true);
-    List listJson;
-
-    for (int i = 0; i < amount; i++) {
-      final response = await http.get(
-          Uri.https('randommer.io', '/api/Name', {
-            'nameType': 'firstname',
-            'quantity': '1',
-          }),
-          headers: {
-            'x-api-key': 'f8f010f6e888495dbce7cc9c02c6cd65',
-          });
-      // Вынеси это в функцию _handleError
-      // if (response.statusCode == 400) {
-      //   throw RequestFailed();
-      // } else if (response.statusCode == 403) {
-      //   throw Forbidden();
-      // } else if (response.statusCode == 404) {
-      //   throw NotFound();
-      // }
-      // if (response.statusCode != 200) {
-      //   throw Exception('Something goes wrong..');
-      // }
-      // _handleError(response.statusCode);
-      _handleError(401);
-      // Не работает
-      listJson = jsonDecode(response.body) as List;
-      list.add(listJson[0]);
-    }
-    return list;
+    final response = await http.get(
+        Uri.https('randommer.io', '/api/Name', {
+          'nameType': 'firstname',
+          'quantity': amount.toString(),
+        }),
+        headers: {
+          'x-api-key': 'f8f010f6e888495dbce7cc9c02c6cd65',
+        });
+    _handleError(response.statusCode);
+    final listJson = jsonDecode(response.body) as List;
+    return listJson.map((e) => e.toString()).toList();
   }
+}
 
-  void _handleError(int statusCode) {
-    if (statusCode == 400) {
-      throw RequestFailed();
-    } else if (statusCode == 403) {
-      throw Forbidden();
-    } else if (statusCode == 404) {
-      throw NotFound();
-    }
-    if (statusCode != 200) {
-      throw Exception('Something goes wrong..');
-    }
+void _handleError(int statusCode) {
+  if (statusCode == 400) {
+    throw RequestFailed();
+  } else if (statusCode == 403) {
+    throw Forbidden();
+  } else if (statusCode == 404) {
+    throw NotFound();
+  }
+  if (statusCode != 200) {
+    // создать еще одни силд класс Unknown
+    throw Exception('Something goes wrong..');
   }
 }
