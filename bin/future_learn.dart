@@ -180,16 +180,6 @@ final class SameSexException implements Exception {
       '${human1.name} и ${human2.name} не могут состоять в отношениях, они одного пола!';
 }
 
-final class StopRelationship implements Exception {
-  const StopRelationship(this.human1, this.human2);
-
-  final Human human1;
-  final Human human2;
-
-  @override
-  String toString() => ('${human1.name} и ${human2.name} расстались!');
-}
-
 final class NotInRelationshipException implements Exception {
   const NotInRelationshipException(this.human1, this.human2);
 
@@ -310,11 +300,11 @@ abstract base class Human {
     // return delay;
   }
 
-  Future<void> stopRelationship(Human another) {
+  Future<void> stopRelationship(Human another) async {
     if (relationshipStatus == another) {
       relationshipStatus = null;
       another.relationshipStatus = null;
-      throw StopRelationship(this, another);
+      print('$name и ${another.name} расстались!');
     } else {
       throw NotInRelationshipException(this, another);
     }
