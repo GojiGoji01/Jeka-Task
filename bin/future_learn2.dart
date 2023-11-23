@@ -21,7 +21,7 @@ Future<void> main() async {
 
   final service = RandomNameService();
   try {
-    final names = await service.loadNames(amount: -1);
+    final names = await service.loadNames(amount: 2, nameType: 0);
     print(names);
   } on HttpException catch (e) {
     print(e.toString());
@@ -38,42 +38,47 @@ sealed class HttpException implements Exception {
           'Пользователь ограничен в доступе к указанному ресурсу!!',
         // Не найдено
         NotFound() => 'Ошибка в написании адреса Web-страницы!!',
+        UnknownException() => 'Неизвестная ошибка!' //неизвестная ошибка
       };
 }
 
-final class RequestFailed implements HttpException {} // 400 - ошибка запроса
+final class RequestFailed extends HttpException {} // 400 - ошибка запроса
 
-final class Forbidden implements HttpException {} // 403 – доступ запрещен
+final class Forbidden extends HttpException {} // 403 – доступ запрещен
 
-final class NotFound implements HttpException {} //404 – не найдено
+final class NotFound extends HttpException {} //404 – не найдено
+
+final class UnknownException extends HttpException {} // != 200
 
 abstract interface class IRandomNameService {
-  Future<String> loadName();
-  Future<List<String>> loadNames({required int amount});
+  Future<String> loadName({required int nameType});
+  Future<List<String>> loadNames({required int amount, required int nameType});
 }
 
 final class RandomNameService implements IRandomNameService {
   @override
-  Future<String> loadName() async {
+  Future<String> loadName({required int nameType}) async {
+    String name = getNameType(nameType);
     final response = await http.get(
         Uri.https('randommer.io', '/api/Name', {
-          'nameType': 'firstname',
+          'nameType': name,
           'quantity': '1',
         }),
         headers: {
           'x-api-key': 'f8f010f6e888495dbce7cc9c02c6cd65',
         });
     _handleError(response.statusCode);
-
     final list = jsonDecode(response.body) as List;
     return list[0];
   }
 
   @override
-  Future<List<String>> loadNames({required int amount}) async {
+  Future<List<String>> loadNames(
+      {required int amount, required int nameType}) async {
+    String name = getNameType(nameType);
     final response = await http.get(
         Uri.https('randommer.io', '/api/Name', {
-          'nameType': 'firstname',
+          'nameType': name,
           'quantity': amount.toString(),
         }),
         headers: {
@@ -85,6 +90,16 @@ final class RandomNameService implements IRandomNameService {
   }
 }
 
+String getNameType(int nameType) {
+  if (nameType == 1) {
+    return 'fullname';
+  } else if (nameType == 2) {
+    return 'surname';
+  } else {
+    return 'firstname';
+  }
+}
+
 void _handleError(int statusCode) {
   if (statusCode == 400) {
     throw RequestFailed();
@@ -92,9 +107,10 @@ void _handleError(int statusCode) {
     throw Forbidden();
   } else if (statusCode == 404) {
     throw NotFound();
-  }
-  if (statusCode != 200) {
-    // создать еще одни силд класс Unknown
-    throw Exception('Something goes wrong..');
+  } else if (statusCode != 200) {
+    throw UnknownException();
   }
 }
+//nametype
+
+
