@@ -1,6 +1,17 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:http/http.dart' as http;
+
+enum NameType {
+  firstName('firstname'),
+  surname('surname'),
+  fullName('fullname');
+
+  const NameType(this.value);
+
+  final String value;
+}
 
 Future<void> main() async {
   /*
@@ -21,7 +32,10 @@ Future<void> main() async {
 
   final service = RandomNameService();
   try {
-    final names = await service.loadNames(amount: 2, nameType: 0);
+    final names = await service.loadNames(
+      amount: Random().nextInt(10),
+      nameType: NameType.fullName,
+    );
     print(names);
   } on HttpException catch (e) {
     print(e.toString());
@@ -51,66 +65,55 @@ final class NotFound extends HttpException {} //404 – не найдено
 final class UnknownException extends HttpException {} // != 200
 
 abstract interface class IRandomNameService {
-  Future<String> loadName({required int nameType});
-  Future<List<String>> loadNames({required int amount, required int nameType});
+  Future<String> loadName({required NameType nameType});
+  Future<List<String>> loadNames({
+    required int amount,
+    required NameType nameType,
+  });
 }
 
 final class RandomNameService implements IRandomNameService {
+  static const _apiKey = 'f8f010f6e888495dbce7cc9c02c6cd65';
+
   @override
-  Future<String> loadName({required int nameType}) async {
-    String name = getNameType(nameType);
-    final response = await http.get(
-        Uri.https('randommer.io', '/api/Name', {
-          'nameType': name,
-          'quantity': '1',
-        }),
-        headers: {
-          'x-api-key': 'f8f010f6e888495dbce7cc9c02c6cd65',
-        });
+  Future<String> loadName({required NameType nameType}) async {
+    final response = await _getNameRequest(nameType, 1);
     _handleError(response.statusCode);
     final list = jsonDecode(response.body) as List;
     return list[0];
   }
 
   @override
-  Future<List<String>> loadNames(
-      {required int amount, required int nameType}) async {
-    String name = getNameType(nameType);
-    final response = await http.get(
-        Uri.https('randommer.io', '/api/Name', {
-          'nameType': name,
-          'quantity': amount.toString(),
-        }),
-        headers: {
-          'x-api-key': 'f8f010f6e888495dbce7cc9c02c6cd65',
-        });
+  Future<List<String>> loadNames({
+    required int amount,
+    required NameType nameType,
+  }) async {
+    final response = await _getNameRequest(nameType, amount);
     _handleError(response.statusCode);
     final listJson = jsonDecode(response.body) as List;
     return listJson.map((e) => e.toString()).toList();
   }
-}
 
-String getNameType(int nameType) {
-  if (nameType == 1) {
-    return 'fullname';
-  } else if (nameType == 2) {
-    return 'surname';
-  } else {
-    return 'firstname';
+  Future<http.Response> _getNameRequest(NameType nameType, int quantity) {
+    return http.get(
+        Uri.https('randommer.io', '/api/Name', {
+          'nameType': nameType.value,
+          'quantity': quantity.toString(),
+        }),
+        headers: {
+          'x-api-key': _apiKey,
+        });
+  }
+
+  void _handleError(int statusCode) {
+    if (statusCode == 400) {
+      throw RequestFailed();
+    } else if (statusCode == 403) {
+      throw Forbidden();
+    } else if (statusCode == 404) {
+      throw NotFound();
+    } else if (statusCode != 200) {
+      throw UnknownException();
+    }
   }
 }
-
-void _handleError(int statusCode) {
-  if (statusCode == 400) {
-    throw RequestFailed();
-  } else if (statusCode == 403) {
-    throw Forbidden();
-  } else if (statusCode == 404) {
-    throw NotFound();
-  } else if (statusCode != 200) {
-    throw UnknownException();
-  }
-}
-//nametype
-
-
