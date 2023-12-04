@@ -1,99 +1,96 @@
 void main() {
   task1();
-}
 
-double kmToMiles(double km) {
-  const kmToMileConv = 0.631130;
-  return km * kmToMileConv;
+  /**
+   * Функции в дарте имеют вид:
+   * String toString(int num) {
+   * ...
+   * }
+   * где String - это тип возвращаемого значения. Означает, что функцию не
+   * может завершиться в любом из своих возможных концов без возвращения пере-
+   * менной типа String. Такой возврат осуществляется ключевым словом return,
+   * например:
+   * final str = 'Some String';
+   * return str;
+   * ИЛИ
+   * return 'Some String';
+   * 
+   * toString  - название функции по которой мы можем ее вызывать,
+   * (int num) - список параметров, передаваемых функции при ее вызове. Задают-
+   * ся в круглых скобках сразу после названия функции через запятую в формате:
+   * тип название
+   * {} –> далее задаются фигурные скобки, определяющие блок кода, выполняемый
+   * функцией
+   */
 }
 
 void task1() {
-  double km1 = 10;
-  double km2 = 20;
-  double km3 = 30;
-  double km4 = 40;
-  double km5 = 50;
+  /* Создать функцию getCount, которая возвращает целое число, а принимает в себя
+  список String. Функция должна считать кол-во элементов в списке и возвращать
+  это кол-во. Не забудь, что функция лишь возращает значение, но не печатает его.
+  После вызова не забудь сделать принт полученного результата.
 
-  print('$km1 км = ${kmToMiles(km1)} миль');
-  print('$km2 км = ${kmToMiles(km2)}миль');
-  print('$km3 км = ${kmToMiles(km3)}миль');
-  print('$km4 км = ${kmToMiles(km4)}миль');
-  print('$km5 км = ${kmToMiles(km5)}миль');
+  Функцию можешь создать в файле либо прямо внутри этой функции
+*/
+  print(getCount(['lol', 'kek', 'meme', 'future']));
 }
 
+int getCount(List<String> ls)
+{
+  return (ls.length);
+}
 
+void task2() {
+  // /**
+  //  * Создать функцию, которая будет сращивать две строки в одну и возвращать
+  //  * полученную строку.
+  // Функцию можешь создать в файле либо прямо внутри этой функции
+  //  */
+  print(mergeString('kek', 'lol'));
+}
 
-// void task1() {
-//   /* Создать функцию getCount, которая возвращает целое число, а принимает в себя
-//   список String. Функция должна считать кол-во элементов в списке и возвращать
-//   это кол-во. Не забудь, что функция лишь возращает значение, но не печатает его.
-//   После вызова не забудь сделать принт полученного результата.
-// */
-//   //  String concatenateStrings(String str1, String str2) {}
-//   int getCount(List<String> list) {
-//     return list.length;
-//   }
+String  mergeString(String s1, String s2)
+{
+  return (s1 + s2);
+}
 
-//   print(getCount);
-// }
+void task3() {
+  /*
+  Создать функицю, которая принимает в себя целое число, а возвращает список
+  целых чисел с 0 до входного числа.
+  */
+  print(integerTo(6));
+}
 
-// void task2() {
-//   // /**
-//   //  * Создать функцию, которая будет сращивать две строки в одну и возвращать
-//   //  * полученную строку.
-//   //  */
-//   String concatenateStrings(String str1, String str2) {
-//     return str1 + str2;
-//   }
-// }
+List<int> integerTo(int integer)
+{
+  List<int>  listOfInteger = [];
 
-// void task3() {
-//   double convertKmtoMiles(double km) {
-//     const kmInMile = 0.621371;
-//     return km * kmInMile;
-//   }
-// }
+  for (int i = 0; i < integer; i++){
+    listOfInteger.add(i);
+  }
 
-// void task4() {
-//   double convertMilestoKm(double mile) {
-//     const mileInKm = 1;
-//     return mile / mileInKm;
-//   }
-// }
+  return (listOfInteger);
+}
 
-// class Kmnamili {
-//   int km;
-//   double mile;
+void task4() {
+  /**
+   * Создать функцию, которая распечатывает тип значения, переданного параметром.
+   * Для определения переменной динамического типа можно использовать тип dynamic.
+   * Например, dynamic something.
+   * Также, чтобы узнать тип переменной в ходе выполнения программы можно исполь
+   * зовать геттер runtimeType. Такой геттер присущ всем переменным, наследующим
+   * класс Object (то есть всем абсолютно, так как в дарте все классы унаследованы
+   * от Object)
+   * 
+   * Формат вывода: 
+   * 10.27 has a type of double
+   * Sokrat has a type of String
+   */
+  printType(1.1);
+}
 
-//   Kmnamili(this.km, this.mile);
-
-//   makeDrobule() {
-//     return km / mile;
-//   }
-// }
-
-// void task5() {
-//   var itog = Kmnamili(1, 0.630134);
-//   print(itog.makeDrobule());
-// }
-
-// void task10() {
-//   final listOfChar = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
-//   // for (var index = 0; index < 6; index++) {
-//   var i = 0;
-//   for (final element in listOfChar) {
-//     print('${++i} $element');
-//   }
-
-//   // print('$index: ${listOfChar[i]}');
-// }
-
-
-/* 
-имя 
-фамилия
-отчество
-паспорт серия и номер
-возраст 
-зарплату по месяцам
-*/
+void  printType(dynamic something)
+{
+  print('$something has a type of ${something.runtimeType}');
+}

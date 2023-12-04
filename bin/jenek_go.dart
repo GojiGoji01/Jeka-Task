@@ -1,14 +1,19 @@
 void main(List<String> arguments) {
+  const isJeka = false;
   const taskNumber = 3;
+
   switch (taskNumber) {
     case 1:
-      task1(); // ✅
+      if (isJeka) return task1Jeka();
+      task1();
     case 2:
+      if (isJeka) return task2Jeka();
       task2();
     case 3:
+      if (isJeka) return task3Jeka();
       task3();
     case 4:
-      task4(); // ✅
+      task4();
     case 5:
       task5();
     default:
@@ -17,63 +22,85 @@ void main(List<String> arguments) {
 }
 
 void task1() {
-  List<int> list = [0, 1, 3, 4, 5, 2, 1, -4, -1, 10, 55];
+  // Выводит все элементы массива.
+  List massive = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  /*Map   massive = {
+    'thirst' : 'thirst',
+    'Second' : 'Second'
+  };*/
+  // Iterator iterator = (massive as Iterator<dynamic>);
 
-  print('$list');
+  for (var i in massive){
+    print(i);
+  }
+}
+
+void task1Jeka() {
+  // Выводит все элементы массива.
+  final randomArray = [0, 123, 54, 2345, 543, 123, 654, 124];
+
+  for (final item in randomArray) {
+    print(item);
+  }
 }
 
 void task2() {
-  List<int> list = [0, 1, 3, 4, 5, 2, 1, -4, -1, 10, 55];
-  List<int> reversedList = list.reversed.toList();
-  print('Вот развернул туда сюда; $reversedList');
+  // Выводит все элементы массива в обратном порядке.
+  List massive = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  int iterator = massive.length;
 
-  // Solution without using .reversed
+  while (--iterator >= 0) {
+    print(massive[iterator]);
+  }
+}
+
+void task2Jeka() {
+  // Выводит все элементы массива в обратном порядке.
+  final randomArray = [0, 123, 54, 2345, 543, 123, 654, 124];
+
+  for (int i = randomArray.length - 1; i >= 0; i--) {
+    print(randomArray[i]);
+  }
 }
 
 void task3() {
-  List<int> list = [0, 1, 3, 4, 5, 2, 1, -4, -1, 10, 55];
-  List<int> evenNumbers = list.where((number) => number.isEven).toList();
+  // Выводит чётные элементы массива.
+  List array = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  int iterator = -1;
 
-  print(evenNumbers);
+  while (++iterator < array.length) {
+    if (array[iterator] % 2 == 0) {
+      print(array[iterator]);
+    }
+  }
+}
 
-  // Solution without .where and .isEven
+void task3Jeka() {
+  // Выводит чётные элементы массива.
+  final array = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+  for (final number in array) {
+    if (number % 2 == 0) print(number);
+  }
 }
 
 void task4() {
-  List<int> list = List.from([0, 1, 3, 4, 5, 2, 1, -4, -1, 10, 55]);
-  List<int> skipList = [];
-  for (int i = 0; i < list.length; i += 2) {
-    skipList.add(list[i]);
+  // Выводит все элементы массива через 1.
+  List array = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+  for (int i = 0; i < array.length; i++){
+    if (i % 2 == 1) print(array[i]);
   }
-  print(skipList);
 }
 
 void task5() {
-  /*
-  решение неверное, числа должны выводиться ПОКА НЕ встретится -1. Т.е. когда 
-  оно встречается, то уже не должно быть его вывода.
-  решение плохое, так как жестко завязано на текущем массиве.
-  Если поменять массив на другой, где 10 не стояло бы за -1, то программа
-  бы отработала неверно. Такого быть не должно. Программа должна всегда
-  выдавать верный результат вне зависимости от входных данных.
-
-  Для более точной проверки своего решения используй для теста следующие массивы
-  (помимо изначального):
-      - [5, 3, -10, -1, 0, 2]
-      - [5234, 1234, -2, -1, 3489, 432, -124, 12345, -12345]
-      - [10, 10, -10, 1, -1]
-  */
-
-  List<int> list = [0, 1, 3, 4, 5, 2, 1, -4, -1, 10, 55];
-  int stopElement = 10;
-  List<int> result = [];
-
-  for (int i = 0; i < list.length; i++) {
-    if (list[i] == stopElement) {
+  // Выводит все элементы массива пока не встретится элемент -1.
+  List array = [1, 2, 3, 4, 5, 6, -1, 7, 8, 9];
+  
+  for (final i in array){
+    if (i == -1)
       break;
-    }
-    result.add(list[i]);
+    else
+      print(i);
   }
-
-  print(result);
 }

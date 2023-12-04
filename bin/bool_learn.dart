@@ -1,9 +1,7 @@
 // import 'dart:math';
 
-import 'dart:math';
-
 void main() {
-  task1();
+  task3();
   /*
   Здарова. Здесь мы будем учить булеаны. Булеан – это тип данных в языке Dart.
   Записывается булеан в дарте как bool. Бул может хранить все всего два
@@ -31,7 +29,7 @@ void main() {
       } else {
         doAnother();
       }
-
+-
       ––––––––––––––––––––––––
       final x = 2;
       final y = 5;
@@ -80,7 +78,7 @@ void main() {
       A || B = false;
 
       Также в алгебре логики есть оператор отрицания – НЕ, в записи языка Dart
-      мы записываем ! перед выражение или переменной, возвращающими bool. Например:
+      мы записываем ! перед выражением\* или переменной, возвращающими bool. Например:
       bool a = true;
       print(a); <-- печатается true;
       print(!a); <-- печатается false;
@@ -127,15 +125,16 @@ void task1() {
   Напечатать '2', если rnd лежит между x и y.
   Напечатать '3', если rnd лежит перед х.
   */
-  final x = 30;
-  final y = 70;
-  final rnd = Random().nextInt(100);
+  var y = 0;
+  var x = 1;
+  var rnd = -1;
+
   if (rnd > y) {
-    print('1');
-  } else if (x < rnd && rnd < y) {
-    print('2');
-  } else {
-    print('3');
+    print(1);
+  } else if (rnd > x && rnd < y) {
+    print(2);
+  } else if (rnd < x) {
+    print(3);
   }
 }
 
@@ -144,15 +143,22 @@ void task2() {
   Создай массив со всеми цветами светофора. Пройдись 4 раза по всему массиву, и
   выведи в консоль true, когда водителю можно ехать, и false когда ехать нельзя.
   */
-  List<String> trafficLights = ['red', 'orange', 'green'];
+  var cvetaSvetofora = {
+    0: 'зеленый',
+    1: 'мигающий зеленый',
+    2: 'желтый',
+    3: 'красный'
+  };
+
   for (int i = 0; i < 4; i++) {
-    for (int j = 0; j < trafficLights.length; j++) {
-      print(trafficLights[j]);
-    }
-    if (i == 2) {
-      print('true');
-    } else {
-      print('false');
+    if (cvetaSvetofora[i] == 'зеленый') {
+      print('Спокойно двигай вперед.');
+    } else if (cvetaSvetofora[i] == 'мигающий зеленый') {
+      print('Если сфетофор близко - втопи по полной (но не больше 79 км/ч.)');
+    } else if (cvetaSvetofora[i] == 'желтый') {
+      print('По хорошему тормози, если сможешь перед стоп линией встать.');
+    } else if (cvetaSvetofora[i] == 'красный') {
+      print('Проскочешь на красный с камерой - выклыдвай 5к!');
     }
   }
 }
@@ -164,54 +170,27 @@ void task3() {
   подается и распределять его в соответствующий магазин. В конце программа должна
   вывести в консоль количество продуктов в каждом магазине после распределения.
   */
-  const apple = 'apple';
-  const toothbrush = 'toothbrush';
-  const couch = 'couch';
-
-  final warehouse = [
-    apple,
-    toothbrush,
-    couch,
-    couch,
-    toothbrush,
-    apple,
-    apple,
-    apple,
-    toothbrush,
-    apple,
-    couch,
-    couch,
-    toothbrush,
-    toothbrush
+  final unsorted = [
+    'appleJuice',
+    'salmon',
+    'fries',
+    'salmon',
+    'appleJuice',
+    'apple',
+    'journal',
+    'salmon',
+    'appleJuice'
   ];
-  final List<String> fruitStore = [];
-  final List<String> cosmeticsStore = [];
-  final List<String> furnitureStore = [];
+  Set<String> production = Set.from(unsorted);
+  List<int> productionCount = List.filled(production.length, 0);
+  Map<String, int> productionCountMap =
+      Map.fromIterables(production, productionCount);
+  int currentCount = 0;
+  int i = -1;
 
-  // Start your code here
-  for (var product in warehouse) {
-    switch (product) {
-      case apple:
-        fruitStore.add(product);
-        break;
-      case toothbrush:
-        cosmeticsStore.add(product);
-        break;
-      case couch:
-        furnitureStore.add(product);
-        break;
-      default:
-        break;
-    }
-    // if (product == apple) {
-    //   fruitStore.add(product);
-    // } else if (product == toothbrush) {
-    //   cosmeticsStore.add(product);
-    // } else if (product == couch) {
-    //   furnitureStore.add(product);
-    // }
+  while (++i < unsorted.length) {
+    currentCount = (productionCountMap[unsorted[i]] as int) + 1;
+    productionCountMap[unsorted[i]] = currentCount;
   }
-  print('Amount of products in fruitStore: ${fruitStore.length}');
-  print('Amount of products in cosmeticStore: ${cosmeticsStore.length}');
-  print('Amount of products in furnitureStore: ${furnitureStore.length}');
+  print(productionCountMap);
 }
