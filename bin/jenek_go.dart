@@ -1,5 +1,7 @@
+import 'dart:io';
+
 void main(List<String> arguments) {
-  const taskNumber = 3;
+  const taskNumber = 4;
 
   switch (taskNumber) {
     case 1:
@@ -17,26 +19,48 @@ void main(List<String> arguments) {
   }
 }
 
+final a = <int>[1, 2, 3, -1, 4, 5];
+
 void task1() {
   // Выводит все элементы массива.
+  a.forEach(print_);
 }
 
 void task2() {
   // Выводит все элементы массива в обратном порядке.
+  a.reversed.forEach(print_);
 }
 
 void task3() {
   // Выводит чётные элементы массива.
+  a.forEach((element) {
+    if (!element.isOdd) print_(element);
+  });
+  // a
+  //     .where((e) => e % 2 == 0)
+  //     .forEach(print);
 }
 
 void task3Jeka() {
   // Выводит чётные элементы массива.
+  // решил не трогать чужой код :)
 }
 
 void task4() {
   // Выводит все элементы массива через 1.
+  for (int i = 0; i < a.length; i += 2) print_(a[i]);
+  // bool flag = true;
+  // a.forEach((element) {
+  //   if (flag) print(element);
+  //   flag = !flag;
+  // });
 }
 
 void task5() {
   // Выводит все элементы массива пока не встретится элемент -1.
+  for (int i = 0; i < a.length && a[i] != -1; i++) {
+    print_(a[i]);
+  }
 }
+
+void print_(int value) => stdout.write(value.toString() + ' ');
