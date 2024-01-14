@@ -1,7 +1,7 @@
 import 'dart:io';
 
 void main(List<String> arguments) {
-  const taskNumber = 4;
+  const taskNumber = 5;
 
   switch (taskNumber) {
     case 1:
@@ -48,7 +48,9 @@ void task3Jeka() {
 
 void task4() {
   // Выводит все элементы массива через 1.
-  for (int i = 0; i < a.length; i += 2) print_(a[i]);
+  for (int i = 0; i < a.length; i += 2) {
+    print_(a[i]);
+  }
   // bool flag = true;
   // a.forEach((element) {
   //   if (flag) print(element);
