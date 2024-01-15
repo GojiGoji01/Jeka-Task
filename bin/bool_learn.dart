@@ -141,4 +141,22 @@ void task3() {
   подается и распределять его в соответствующий магазин. В конце программа должна
   вывести в консоль количество продуктов в каждом магазине после распределения.
   */
+  final products = [
+    Product.potato,
+    Product.apple,
+    Product.orange,
+    Product.apple,
+    Product.tomato,
+    Product.apple,
+    Product.potato,
+    Product.apple,
+    Product.potato,
+    Product.tomato,
+    Product.potato,
+    Product.orange,
+  ];
+  final fruitStore = <Product>[];
+  final vegetableStore = <Product>[];
 }
+
+enum Product { apple, orange, tomato, potato }
