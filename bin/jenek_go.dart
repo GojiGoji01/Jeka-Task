@@ -31,9 +31,9 @@ void task2() {
 
 void task3() {
   // Выводит чётные элементы массива.
-  a.forEach((element) {
+  for (var element in a) {
     if (!element.isOdd) spacedPrint(element);
-  });
+  }
   // a
   //     .where((e) => e % 2 == 0)
   //     .forEach(print);

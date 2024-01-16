@@ -135,7 +135,7 @@ void task1() {
   if (rnd > y) {
     print(1);
     if (rnd < x) {
-      print(23);
+      print('2\n3');
     }
   } else if (rnd != y && rnd > x) {
     print(2);
