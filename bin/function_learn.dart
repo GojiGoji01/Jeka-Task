@@ -1,5 +1,5 @@
 void main() {
-  task3();
+  task4();
 
   /**
    * Функции в дарте имеют вид:
@@ -76,8 +76,9 @@ void task4() {
   printType(14.88);
   printType('14.88');
   printType(DateTime(2024));
+  printType(null);
 }
 
-void printType(Object o) {
+void printType(Object? o) {
   print('$o has a type of ${o.runtimeType}');
 }

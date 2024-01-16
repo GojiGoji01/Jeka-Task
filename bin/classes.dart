@@ -83,14 +83,14 @@ class Square extends Shape {
   /// sqr.sideSize = 10; <--- компилятор выдаст ошибку, так как sideSize это
   /// геттер.
   double get sideSize => sqrt(area); // sqrt(x) - функция, выдающая квадратный
-  // корень из x.
+// корень из x.
 }
 
 class Triangle extends Shape {
   Triangle(
       {required super.area,
       this.isEquilateral =
-          false /*необязательный параметр, 
+          false /*необязательный параметр,
   но если мы его не укажем, то установится дефолтное значение */
       })
       : super(sidesCount: 3);
@@ -103,12 +103,50 @@ void task1() {
   Необходимо создать класс Человек с параметрами: имя, пол, возраст, и методами:
   поприветствовать, который будет выводить в консоль Привет, [Имя другого человека]!.
 
-  Также создать функцию "начать отношения", параметром принимающая другого человека и 
+  Также создать функцию "начать отношения", параметром принимающая другого человека и
   проверяющая его пол и наличие других отношений. Если пол противоположен и у другого
   человека нет отношений, то начать отношения с этим человеком, в противном случае вывести
   в консоль причину отказа (пол или наличие отношений).
 
   Также создать функцию "разорвать отношения", которая разрывает текущие отношения,
-  если таковые имеются. 
+  если таковые имеются.
    */
+}
+
+class Human {
+  String name;
+  final bool isMale;
+  int age;
+  Human? beloved;
+
+  Human(
+      {required this.name,
+      required this.isMale,
+      required this.age,
+      this.beloved});
+
+  void greet(String nameToSay) {
+    print('Привет, $nameToSay!');
+  }
+
+  bool startDating(Human partnerTillTheRestOfLife) {
+    if (isMale != partnerTillTheRestOfLife.isMale) {
+      if (beloved != null) {
+        print('Сердечко занято');
+        return false;
+      } else {
+        beloved = partnerTillTheRestOfLife;
+        return true;
+      }
+    } else {
+      print('срам');
+      return false;
+    }
+  }
+
+  bool breakUp() {
+    bool res = beloved != null;
+    beloved = null;
+    return res;
+  }
 }
