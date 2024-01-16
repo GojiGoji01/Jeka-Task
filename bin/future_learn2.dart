@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:http/http.dart' as http;
 
@@ -32,11 +31,10 @@ Future<void> main() async {
 
   final service = RandomNameService();
   try {
-    final names = await service.loadNames(
-      amount: Random().nextInt(10),
+    final name = await service.loadName(
       nameType: NameType.fullName,
     );
-    print(names);
+    print(name);
   } on HttpException catch (e) {
     print(e.toString());
   }
@@ -77,7 +75,14 @@ final class RandomNameService implements IRandomNameService {
 
   @override
   Future<String> loadName({required NameType nameType}) async {
-    final response = await _getNameRequest(nameType, 1);
+    final response = await http.get(
+        Uri.https('randommer.io', '/api/Name', {
+          'nameType': nameType.value,
+          'quantity': 1.toString(),
+        }),
+        headers: {
+          'x-api-key': _apiKey,
+        });
     _handleError(response.statusCode);
     final list = jsonDecode(response.body) as List;
     return list[0];
@@ -87,22 +92,8 @@ final class RandomNameService implements IRandomNameService {
   Future<List<String>> loadNames({
     required int amount,
     required NameType nameType,
-  }) async {
-    final response = await _getNameRequest(nameType, amount);
-    _handleError(response.statusCode);
-    final listJson = jsonDecode(response.body) as List;
-    return listJson.map((e) => e.toString()).toList();
-  }
-
-  Future<http.Response> _getNameRequest(NameType nameType, int quantity) {
-    return http.get(
-        Uri.https('randommer.io', '/api/Name', {
-          'nameType': nameType.value,
-          'quantity': quantity.toString(),
-        }),
-        headers: {
-          'x-api-key': _apiKey,
-        });
+  }) {
+    throw UnimplementedError();
   }
 
   void _handleError(int statusCode) {

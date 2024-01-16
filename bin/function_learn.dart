@@ -32,12 +32,6 @@ void task1() {
 
   Функцию можешь создать в файле либо прямо внутри этой функции
 */
-  print(getCount(['lol', 'kek', 'meme', 'future']));
-}
-
-int getCount(List<String> ls)
-{
-  return (ls.length);
 }
 
 void task2() {
@@ -46,31 +40,12 @@ void task2() {
   //  * полученную строку.
   // Функцию можешь создать в файле либо прямо внутри этой функции
   //  */
-  print(mergeString('kek', 'lol'));
 }
-
-String  mergeString(String s1, String s2)
-{
-  return (s1 + s2);
-}
-
 void task3() {
   /*
   Создать функицю, которая принимает в себя целое число, а возвращает список
   целых чисел с 0 до входного числа.
   */
-  print(integerTo(6));
-}
-
-List<int> integerTo(int integer)
-{
-  List<int>  listOfInteger = [];
-
-  for (int i = 0; i < integer; i++){
-    listOfInteger.add(i);
-  }
-
-  return (listOfInteger);
 }
 
 void task4() {
@@ -87,10 +62,4 @@ void task4() {
    * 10.27 has a type of double
    * Sokrat has a type of String
    */
-  printType(1.1);
-}
-
-void  printType(dynamic something)
-{
-  print('$something has a type of ${something.runtimeType}');
 }
