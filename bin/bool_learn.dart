@@ -3,7 +3,7 @@
 import 'dart:math';
 
 void main() {
-  task1();
+  task3();
   /*
   Здарова. Здесь мы будем учить булеаны. Булеан – это тип данных в языке Dart.
   Записывается булеан в дарте как bool. Бул может хранить все всего два
@@ -156,6 +156,25 @@ void task2() {
   for (int i = 0; i < 16; i++) {
     r = i % 4;
     print(a[r < 3 ? r : 1] == 'Green');
+  }
+}
+
+void task2Jeka() {
+  const redLight = 'Red';
+  const yellowLight = 'Yellow';
+  const greenLight = 'Green';
+
+  final trafficLights = <String>[redLight, yellowLight, greenLight];
+
+  String? previousLight;
+  for (int i = 0; i < 3; i++) {
+    for (final light in trafficLights) {
+      print('Previous Light: $previousLight');
+      print('Current Light: $light');
+      print(light != redLight ||
+          (light == yellowLight && previousLight == redLight));
+      previousLight = light;
+    }
   }
 }
 
