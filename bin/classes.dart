@@ -111,6 +111,19 @@ void task1() {
   Также создать функцию "разорвать отношения", которая разрывает текущие отношения,
   если таковые имеются.
    */
+  final jeka = Human(name: 'Jeka', isMale: true, age: 25);
+  final ksu = Human(name: 'Ksusha', isMale: false, age: 20);
+  final someGirl = Human(name: 'Unknown', isMale: false, age: 18);
+  jeka.greet(ksu.name);
+
+  jeka.startDating(ksu);
+
+  jeka.startDating(someGirl);
+
+  print(jeka);
+  print(ksu);
+
+  // Same to breakUp func
 }
 
 class Human {
@@ -148,5 +161,16 @@ class Human {
     bool res = beloved != null;
     beloved = null;
     return res;
+  }
+
+  @override
+  String toString() {
+    return '''
+––––––––––––––––––––
+name: $name
+age: $age
+gender: ${isMale ? 'male' : 'female'}
+beloved: ${beloved?.name}
+''';
   }
 }
