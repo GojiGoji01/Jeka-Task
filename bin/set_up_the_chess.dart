@@ -105,10 +105,10 @@ class Piece {
 
 
 
-
+import 'dart:math' as Math;
 
 void main() {
-  presentPosW = parsePosition('Kh8', true); //to do
+  presentPosW = parsePosition('Kh8'); //to do
 }
 
 enum Type { pawn, knight, bishop, rook, queen, king }
@@ -129,51 +129,65 @@ void findMatches(List<Piece> prsList, List<Piece> trgList) {
   
   for (Type t in Type.values) {
     //сколько ищем пар
-    final matchAmount = min(prs[t].length, trg[t].length);
+    final matchAmount = Math.min(prs[t]!.length, trg[t]!.length);
     //останется 
-    final remainder = abs(prs[t].length- trg[t].length)
-    
-    List<List<double>> m = makeMatrix(prs[t].length, trg[t].length);
+    final remainder = (prs[t]!.length- trg[t]!.length).abs();    
+    List<List<double>> m = makeMatrix(prs[t]!.length, trg[t]!.length);
     //всевозможные расстояния
-    for (int i = 0; i < prs[t].length; i++) {
-      for (int j = 0; j < trg[t]; j++) {
-        m[i][j] = r(prs[t][i], trg[t][j]);
+    for (int i = 0; i < prs[t]!.length; i++) {
+      for (int j = 0; j < trg[t]!.length; j++) {
+        m[i][j] = r(prs[t]![i], trg[t]![j]);
       }
     }
     double max, min;
     int ii = 0;
     int jj = 0;
-    for (int n = 0; n < maxOfM; n++){
+    for (int n = 0; n < matchAmount; n++){
       max = 0.0;
       for (int i = 0; i < m.length; i++) {
         min = 128.0;
         for (int j = 0; j < m[i].length; j++) {
-          min = min(m[i][j], min);
+          min = Math.min(m[i][j], min);
           int jj = j;
         }
-        max = max(min, max);
+        max = Math.max(min, max);
         int ii = i;
       }
       //работает только при remainder==0 TODO
       //запись в ответ
-      prsMatch.add(prs[t][ii]);
-      trgMatch.add(trg[t][jj]);
+      prsMatch.add(prs[t]![ii]);
+      trgMatch.add(trg[t]![jj]);
       for (int i = 0; i < m.length; i++) m[i][jj] =128;
-      for (double d in m[i]) d = 128;
+      for (double d in m[ii]) d = 128;
     }
   }
   
 }
 
 double r(Piece a, Piece b)
-  => sqrt(pow(a.h - b.h, 2) + pow(a.v - b.v, 2));
+  => Math.sqrt(Math.pow(a.h - b.h, 2) + Math.pow(a.v - b.v, 2));
 
 Map<Type, List<Piece>> countPieces(List<Piece> l) {
-  Map<Type, int> m = {for (var value in Type.values) value:0};
-  for (Piece p in l) m[p.type].add(p);
+  Map<Type, List<Piece>> m = {for (var value in Type.values) value:[]};
+  for (Piece p in l) {
+    m[p.type]!.add(p);
+  }
   return m;
 }
 
+List<List<double>> makeMatrix(int a, int b) {
+  int size = 10;
+  List<List<double>> matrix = List<List<double>>(size);
+  for (var i = 0; i < size; i++) {
+    matrix[i] = List<double>(size);
+
+    for (double e in matrix[i]) {
+      e = 0.0;
+    }
+
+  }
+  return matrix;
+}
 
 bool areThereAnyMatches(List<Piece> posW, List<Piece> posN) {
   bool res;
@@ -249,7 +263,7 @@ class Piece {
   final int h;
   final int v;
 
-  Piece(this.type, this.h, this.v, this.nigger);
+  Piece(this.type, this.h, this.v);
 
   static bool isTheSameLoc(Piece p1, p2) {
     return (p1.h == p2.h && p1.v == p2.v);
