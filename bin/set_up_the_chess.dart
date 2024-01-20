@@ -86,3 +86,172 @@ class Piece {
     return (p1.h == p2.h && p1.v == p2.v);
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void main() {
+  presentPosW = parsePosition('Kh8', true); //to do
+}
+
+enum Type { pawn, knight, bishop, rook, queen, king }
+
+//presentPos.length < 32
+var presentPosW = <Piece>[];
+var presentPosN = <Piece>[];
+var targetPosW = <Piece>[];
+var targetPosN = <Piece>[];
+
+var prsMatch = <Piece>[];
+var trgMatch = <Piece>[];
+
+void findMatches(List<Piece> prsList, List<Piece> trgList) {
+  //подсчет пешек, ферзей и тд
+  Map<Type, List<Piece>> prs = countPieces(prsList);
+  Map<Type, List<Piece>> trg = countPieces(trgList);
+  
+  for (Type t in Type.values) {
+    //сколько ищем пар
+    final matchAmount = min(prs[t].length, trg[t].length);
+    //останется 
+    final remainder = abs(prs[t].length- trg[t].length)
+    
+    List<List<double>> m = makeMatrix(prs[t].length, trg[t].length);
+    //всевозможные расстояния
+    for (int i = 0; i < prs[t].length; i++) {
+      for (int j = 0; j < trg[t]; j++) {
+        m[i][j] = r(prs[t][i], trg[t][j]);
+      }
+    }
+    double max, min;
+    int ii = 0;
+    int jj = 0;
+    for (int n = 0; n < maxOfM; n++){
+      max = 0.0;
+      for (int i = 0; i < m.length; i++) {
+        min = 128.0;
+        for (int j = 0; j < m[i].length; j++) {
+          min = min(m[i][j], min);
+          int jj = j;
+        }
+        max = max(min, max);
+        int ii = i;
+      }
+      //работает только при remainder==0 TODO
+      //запись в ответ
+      prsMatch.add(prs[t][ii]);
+      trgMatch.add(trg[t][jj]);
+      for (int i = 0; i < m.length; i++) m[i][jj] =128;
+      for (double d in m[i]) d = 128;
+    }
+  }
+  
+}
+
+double r(Piece a, Piece b)
+  => sqrt(pow(a.h - b.h, 2) + pow(a.v - b.v, 2));
+
+Map<Type, List<Piece>> countPieces(List<Piece> l) {
+  Map<Type, int> m = {for (var value in Type.values) value:0};
+  for (Piece p in l) m[p.type].add(p);
+  return m;
+}
+
+
+bool areThereAnyMatches(List<Piece> posW, List<Piece> posN) {
+  bool res;
+  int i, j;
+  //check n-n matches
+  int n = posN.length;
+  for (i = 0; i < posN.length - 1 && n == posN.length; i++) {
+    n = i + 1;
+    while (n < posN.length && !Piece.isTheSameLoc(posN[i], posN[n])) {
+      n++;
+    }
+  }
+  if (n < posN.length) {
+    res = true;
+  } else {
+    for (i = 0; i < posW.length && n == posN.length; i++) {
+      //check w-w matches
+      j = i + 1;
+      while (j < posW.length && !Piece.isTheSameLoc(posW[i], posW[j])) {
+        j++;
+      }
+      if (j < posW.length) break;
+      //check w-n matches
+      n = 0;
+      while (n < posN.length && Piece.isTheSameLoc(posW[i], posN[n])) {
+          n++;
+      }
+    }
+    res = j < posW.length || n < posN.length;
+  }
+  return res;
+}
+
+Piece parsePiece(String s) {
+  Type type;
+  int hc = s[0].hashCode;
+  final hcA = 'a'.hashCode;
+  final hcH = 'h'.hashCode;
+
+  if (hc >= hcA && hc <= hcH) {
+    type = Type.pawn;
+    s = 'P$s';
+  } else {
+    type = switch (s[0]) {
+      'N' => Type.knight,
+      'B' => Type.bishop,
+      'R' => Type.rook,
+      'Q' => Type.queen,
+      'K' => Type.king,
+      _ => throw Exception('creating piece err')
+    };
+    hc = s[1].hashCode;
+    if (hc < hcA || hc > hcH) {
+      throw Exception('creating piece err');
+    }
+  }
+  int h = hc - hcA;
+
+  int v = int.tryParse(s[2], radix: 9) ?? 0;
+  if (v == 0) throw Exception();
+  v -= 1;
+
+  return Piece(type, h, v);
+}
+
+List<Piece> parsePosition(String s) {
+  var words = s.split(' ');
+  return [for (var word in words) parsePiece(word)];
+}
+
+class Piece {
+  final Type type;
+  final int h;
+  final int v;
+
+  Piece(this.type, this.h, this.v, this.nigger);
+
+  static bool isTheSameLoc(Piece p1, p2) {
+    return (p1.h == p2.h && p1.v == p2.v);
+  }
+}
