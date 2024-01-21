@@ -32,17 +32,17 @@ void main() {
   for (Type t in Type.values) {
     if (trg[t]!.length >= prs[t]!.length) {
       prsHalf.addAll(prs![t]);
-      trgHalf(selectFromBig(prs![t], trg![t]));
+      trgHalf.addAll(selectFromBig(prs[t]!, trg[t]!));
     } else {
-      trgHalf.addAll(trg![t]);
-      prsHalf(selectFromBig(trg![t], prs![t]));
+      trgHalf.addAll(trg[t]!);
+      prsHalf.addAll(selectFromBig(trg[t]!, prs[t]!));
     }
   }
   return (prsHalf, trgHalf);
 }
 
 List<Piece> selectFromBig(List<Piece> small, List<Piece> big) {
-  List<Piece> halfFromSmall = [], halfFromBig = [];
+  List<Piece> halfFromBig = [];
 
   List<List<double>> m = List.generate(
       small.length, growable: false, (_) => List.filled(big.length, 0.0));
@@ -54,7 +54,7 @@ List<Piece> selectFromBig(List<Piece> small, List<Piece> big) {
   
   Stack stack = bestSet(m).$1;
   for (int i = 0; i < stack.length; i++) {
-      halfFromBig[i] = big[pop];
+      halfFromBig[i] = big[stack.pop];
   }
   
   return halfFromBig;
