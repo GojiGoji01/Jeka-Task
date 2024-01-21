@@ -1,30 +1,36 @@
+import 'dart:convert';
 import 'dart:math' as math;
 
 void main() {
-  var
-    presentPosW = parsePosition('Kg1 Rf1 f2 g3 h4'),
-    presentPosN = parsePosition('Kg8 Rf8 f7 g6 h5'),
-    targetPosW = parsePosition('a2 b2 c2 d2 e2 f2 g2 h2 Ra1 Nb1 Bc1 Qd1 Ke1 Bf1 Ng1 Rh1'),
-    targetPosN = parsePosition('a7 b7 c7 d7 e7 f7 g7 h7 Ra8 Nb8 Bc8 Qd8 Ke8 Bf8 Ng8 Rh8');
-  
-  bool b =
-    areThereAnyMatches(presentPosW, presentPosN)
-    || areThereAnyMatches(targetPosW, targetPosN);
-  if (b) throw Exception('');
-  
-  var
-    (prsToMoveW, trgToMoveW) = findMatches(presentPosW, presentPosW),
-    (prsToMoveN, trgToMoveN) = findMatches(presentPosN, presentPosN);
+  var presentPosW = parsePosition('Kg1 Rf1 f2 g3 h4'),
+      presentPosN = parsePosition('Kg8 Rf8 f7 g6 h5'),
+      targetPosW = parsePosition(
+          'a2 b2 c2 d2 e2 f2 g2 h2 Ra1 Nb1 Bc1 Qd1 Ke1 Bf1 Ng1 Rh1'),
+      targetPosN = parsePosition(
+          'a7 b7 c7 d7 e7 f7 g7 h7 Ra8 Nb8 Bc8 Qd8 Ke8 Bf8 Ng8 Rh8');
+
+  var matchesInPresent = areThereAnyMatches(presentPosW, presentPosN),
+      matchesInTarget = areThereAnyMatches(targetPosW, targetPosN);
+  if (matchesInPresent != null || matchesInTarget != null) {
+    throw Exception(matchesInPresent ?? ('target', matchesInTarget));
+  }
+
+  var (prsToMoveW, trgToMoveW) = findMatches(presentPosW, targetPosW);
+  var (prsToMoveN, trgToMoveN) = findMatches(presentPosN, targetPosN);
+
+  print('---WHITE---');
   print(prsToMoveW);
+  print('----TO----');
   print(trgToMoveW);
+  print('---NIGGERS---');
   print(prsToMoveN);
+  print('----TO----');
   print(trgToMoveN);
 }
 
-(List<Piece>, List<Piece>) findMatches(List<Piece> prsList, List<Piece> trgList) {
-  var
-    prsHalf = <Piece>[],
-    trgHalf = <Piece>[];
+(List<Piece>, List<Piece>) findMatches(
+    List<Piece> prsList, List<Piece> trgList) {
+  var prsHalf = <Piece>[], trgHalf = <Piece>[];
   //подсчёт пешек, ферзей и тд
   Map<Type, List<Piece>> prs = countPieces(prsList);
   Map<Type, List<Piece>> trg = countPieces(trgList);
@@ -42,34 +48,29 @@ void main() {
 }
 
 List<Piece> selectFromBig(List<Piece> small, List<Piece> big) {
-  List<Piece> halfFromBig = [];
-
-  List<List<double>> m = List.generate(
-      small.length, growable: false, (_) => List.filled(big.length, 0.0));
+  List<List<double>> matrix = List.generate(
+      small.length,
+      growable: false,
+      (_) => List.filled(big.length, 0.0, growable: true));
   for (int i = 0; i < small.length; i++) {
     for (int j = 0; j < big.length; j++) {
-      m[i][j] = r(small[i], big[j]);
+      matrix[i][j] = r(small[i], big[j]);
     }
   }
-  
-  Stack stack = bestSet(m).$1;
-  for (int i = 0; i < stack.length; i++) {
-      halfFromBig[i] = big[stack.pop];
-  }
-  
+
+  MyStack stack = theBestSet(matrix).$2;
+  List<Piece> halfFromBig =
+      List.generate(stack.length, (index) => big[stack.at(index)]);
   return halfFromBig;
 }
 
-(double, Stack) bestSet(List<List<double>> m) {
+(double, MyStack) theBestSet(List<List<double>> m) {
   // m.length < m[0].length
-  int
-    j = 0,
-    i;
+  int j = 0, i;
   double min = 1e+6;
-  Stack path = Stack();
   if (m.isEmpty) {
-      return (0.0, path);
-  } else if (m.single != null) {
+    return (0.0, MyStack([]));
+  } else if (m.length == 1) {
     int ii = -1;
     for (i = 0; i < m[0].length; i++) {
       if (m[0][i] < min) {
@@ -77,12 +78,9 @@ List<Piece> selectFromBig(List<Piece> small, List<Piece> big) {
         ii = i;
       }
     }
-    path.push(ii);
-    return (min, path);
+    return (min, MyStack([ii]));
   } else if (m.length == 2) {
-    int
-      ii = -1,
-      jj = -1;
+    int ii = -1, jj = -1;
     for (i = 0; i < m[0].length; i++) {
       for (j = 0; j < i; j++) {
         if (min > m[0][i] + m[1][j]) {
@@ -91,7 +89,7 @@ List<Piece> selectFromBig(List<Piece> small, List<Piece> big) {
           jj = j;
         }
       }
-      for (j++; j < m[1].length; j++) {
+      for (j = i + 1; j < m[1].length; j++) {
         if (min > m[0][i] + m[1][j]) {
           min = m[0][i] + m[1][j];
           ii = i;
@@ -99,18 +97,17 @@ List<Piece> selectFromBig(List<Piece> small, List<Piece> big) {
         }
       }
     }
-    return (min, Stack.init([jj, ii]));
+    return (min, MyStack([jj, ii]));
   } else {
+    MyStack path = MyStack.err();
+    List<List<double>> nedoTruncatedM = m.skip(1).toList(growable: false);
     for (int i = 0; i < m[0].length; i++) {
-      List<List<double>> truncatedM = [...m];
-      truncatedM.removeAt(i);
-      for (int j = 0; j < truncatedM[0].length; j++) {
-        truncatedM[j].removeAt(j);
-      }
-      var (d, token) = bestSet(truncatedM);
-      if (d < min) {
-        min = d;
+      var trM = withoutLine(i, nedoTruncatedM);
+      var (d, token) = theBestSet(trM);
+      if (d + m[0][i] < min) {
+        min = d + m[0][i];
         path = token;
+        path.forUntoEveryOneThatHathShallBeGiven(i);
         path.push(i);
       }
     }
@@ -118,6 +115,10 @@ List<Piece> selectFromBig(List<Piece> small, List<Piece> big) {
   }
 }
 
+List<List<double>> withoutLine(int line, List<List<double>> nedoTruncatedM) => [
+      for (int j = 0; j < nedoTruncatedM.length; j++)
+        [...nedoTruncatedM[j].take(line), ...nedoTruncatedM[j].skip(line + 1)]
+    ];
 
 double r(Piece a, Piece b) =>
     math.sqrt(math.pow(a.h - b.h, 2) + math.pow(a.v - b.v, 2));
@@ -130,8 +131,11 @@ Map<Type, List<Piece>> countPieces(List<Piece> l) {
   return m;
 }
 
-bool areThereAnyMatches(List<Piece> posW, List<Piece> posN) {
-  bool res;
+enum Color { whiteWhite, whiteNigger, niggerNigger }
+
+// Color value represents, where exactly was match
+(Piece, Piece, Color)? areThereAnyMatches(List<Piece> posW, List<Piece> posN) {
+  (Piece, Piece, Color)? res;
   int i, j = 0;
   //check n-n matches
   int n = posN.length;
@@ -142,7 +146,7 @@ bool areThereAnyMatches(List<Piece> posW, List<Piece> posN) {
     }
   }
   if (n < posN.length) {
-    res = true;
+    res = (posN[i], posN[n], Color.niggerNigger);
   } else {
     for (i = 0; i < posW.length && n == posN.length; i++) {
       //check w-w matches
@@ -153,20 +157,23 @@ bool areThereAnyMatches(List<Piece> posW, List<Piece> posN) {
       if (j < posW.length) break;
       //check w-n matches
       n = 0;
-      while (n < posN.length && Piece.isTheSameLoc(posW[i], posN[n])) {
+      while (n < posN.length && !Piece.isTheSameLoc(posW[i], posN[n])) {
         n++;
       }
     }
-    res = j < posW.length || n < posN.length;
+    if (j < posW.length) {
+      res = (posW[i], posW[j], Color.whiteWhite);
+    } else if (n < posN.length) {
+      res = (posW[i], posN[n], Color.whiteNigger);
+    }
   }
   return res;
 }
 
 Piece parsePiece(String s) {
   Type type;
-  int hc = s[0].hashCode;
-  final hcA = 'a'.hashCode;
-  final hcH = 'h'.hashCode;
+  int hc = s[0].codeUnitAt(0);
+  final hcA = 'a'.codeUnitAt(0), hcH = 'h'.codeUnitAt(0);
 
   if (hc >= hcA && hc <= hcH) {
     type = Type.pawn;
@@ -180,7 +187,7 @@ Piece parsePiece(String s) {
       'K' => Type.king,
       _ => throw Exception('creating piece err')
     };
-    hc = s[1].hashCode;
+    hc = s[1].codeUnitAt(0);
     if (hc < hcA || hc > hcH) {
       throw Exception('creating piece err');
     }
@@ -189,7 +196,7 @@ Piece parsePiece(String s) {
 
   int v = int.tryParse(s[2], radix: 9) ?? 0;
   if (v == 0) throw Exception();
-  v -= 1;
+  v--;
 
   return Piece(type, h, v);
 }
@@ -209,20 +216,44 @@ class Piece {
   static bool isTheSameLoc(Piece p1, p2) {
     return (p1.h == p2.h && p1.v == p2.v);
   }
+
+  get letter => Utf8Decoder().convert(["a".codeUnitAt(0) + h]);
+
+  static int toH(String s) => s.codeUnitAt(0) - 'a'.codeUnitAt(0);
+
+  @override
+  String toString() {
+    return '''
+    
+${type.name} $letter($h)($v)''';
+  }
 }
 
 enum Type { pawn, knight, bishop, rook, queen, king }
 
-class Stack {
-  Stack();
-  Stack.init(List<int> args) {
-    _path.addAll(args);
-  }
-  
-  final List<int> _path = [];
+class MyStack {
+  MyStack(List<int> args) : _path = List.from(args);
+
+  MyStack.err() : _path = List.filled(256, 404);
+
+  final List<int> _path;
 
   void push(int i) => _path.add(i);
+
   get pop => _path.removeLast();
 
   get length => _path.length;
+
+  int at(int index) => _path[_path.length - 1 - index];
+
+  void forUntoEveryOneThatHathShallBeGiven(int lineNum) {
+    for (int i = 0; i < _path.length; i++) {
+      if (_path[i] >= lineNum) {
+        _path[i]++;
+      }
+    }
+  }
+
+  @override
+  String toString() => _path.toString();
 }
