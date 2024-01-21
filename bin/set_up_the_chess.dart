@@ -224,5 +224,5 @@ class Stack {
   void push(int i) => _path.add(i);
   get pop => _path.removeLast();
 
-  get length => _path.length
+  get length => _path.length;
 }
