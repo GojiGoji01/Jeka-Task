@@ -10,7 +10,7 @@ void main() {
   bool b =
     areThereAnyMatches(presentPosW, presentPosN)
     || areThereAnyMatches(targetPosW, targetPosN);
-  if (b) throw RuntimeException('');
+  if (b) throw Exception('');
   
   var
     (prsToMoveW, trgToMoveW) = findMatches(presentPosW, presentPosW),
@@ -31,7 +31,7 @@ void main() {
 
   for (Type t in Type.values) {
     if (trg[t]!.length >= prs[t]!.length) {
-      prsHalf.addAll(prs![t]);
+      prsHalf.addAll(prs[t]!);
       trgHalf.addAll(selectFromBig(prs[t]!, trg[t]!));
     } else {
       trgHalf.addAll(trg[t]!);
@@ -81,7 +81,7 @@ List<Piece> selectFromBig(List<Piece> small, List<Piece> big) {
     return (min, path);
   } else if (m.length == 2) {
     int
-      ii = -1;
+      ii = -1,
       jj = -1;
     for (i = 0; i < m[0].length; i++) {
       for (j = 0; j < i; j++) {
@@ -99,7 +99,7 @@ List<Piece> selectFromBig(List<Piece> small, List<Piece> big) {
         }
       }
     }
-    return (min, Stack.init(jj, ii));
+    return (min, Stack.init([jj, ii]));
   } else {
     for (int i = 0; i < m[0].length; i++) {
       List<List<double>> truncatedM = [...m];
