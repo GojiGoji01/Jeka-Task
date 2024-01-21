@@ -1,96 +1,105 @@
 import 'dart:math' as math;
 
 void main() {
-  presentPosW = parsePosition('Kh8'); //to do
+  var
+    presentPosW = parsePosition('Kg1 Rf1 f2 g3 h4'),
+    presentPosN = parsePosition('Kg8 Rf8 f7 g6 h5'),
+    targetPosW = parsePosition('a2 b2 c2 d2 e2 f2 g2 h2 Ra1 Nb1 Bc1 Qd1 Ke1 Bf1 Ng1 Rh1'),
+    targetPosN = parsePosition('a7 b7 c7 d7 e7 f7 g7 h7 Ra8 Nb8 Bc8 Qd8 Ke8 Bf8 Ng8 Rh8');
+  
+  bool b =
+    areThereAnyMatches(presentPosW, presentPosN)
+    || areThereAnyMatches(targetPosW, targetPosN);
+  if (b) throw RuntimeException('');
+  
+  var
+    (prsToMoveW, trgToMoveW) = findMatches(presentPosW, presentPosW),
+    (prsToMoveN, trgToMoveN) = findMatches(presentPosN, presentPosN);
+  print(prsToMoveW);
+  print(trgToMoveW);
+  print(prsToMoveN);
+  print(trgToMoveN);
 }
 
-enum Type { pawn, knight, bishop, rook, queen, king }
-
-//presentPos.length < 32
-var presentPosW = <Piece>[];
-var presentPosN = <Piece>[];
-var targetPosW = <Piece>[];
-var targetPosN = <Piece>[];
-
-void findMatches(List<Piece> prsList, List<Piece> trgList) {
+(List<Piece>, List<Piece>) findMatches(List<Piece> prsList, List<Piece> trgList) {
+  var
+    prsHalf = <Piece>[],
+    trgHalf = <Piece>[];
   //подсчёт пешек, ферзей и тд
   Map<Type, List<Piece>> prs = countPieces(prsList);
   Map<Type, List<Piece>> trg = countPieces(trgList);
 
   for (Type t in Type.values) {
-    int remainder = trg[t]!.length - prs[t]!.length;
-    int matchAmount; //сколько ищем пар
-
-    if (remainder >= 0) {
-      matchAmount = trg[t]!.length - remainder;
-      //всевозможные расстояния
-      for (int i = 0; i < prs[t]!.length; i++) {
-        for (int j = 0; j < trg[t]!.length; j++) {
-          //m[i][j] = r(prs[t]![i], trg[t]![j]);
-        }
-      }
+    if (trg[t]!.length >= prs[t]!.length) {
+      prsHalf.addAll(prs![t]);
+      trgHalf(selectFromBig(prs![t], trg![t]));
     } else {
-      matchAmount = remainder - trg[t]!.length;
+      trgHalf.addAll(trg![t]);
+      prsHalf(selectFromBig(trg![t], prs![t]));
     }
   }
+  return (prsHalf, trgHalf);
 }
 
-(List<Piece>, List<Piece>) optimPairs(List<Piece> small, List<Piece> big) {
+List<Piece> selectFromBig(List<Piece> small, List<Piece> big) {
   List<Piece> halfFromSmall = [], halfFromBig = [];
 
   List<List<double>> m = List.generate(
-      big.length, growable: false, (_) => List.filled(big.length, 0.0));
+      small.length, growable: false, (_) => List.filled(big.length, 0.0));
   for (int i = 0; i < small.length; i++) {
-    for (int j = 0; j < small.length; j++) {
-      m[i][j] = r(big[i], small[j]);
+    for (int j = 0; j < big.length; j++) {
+      m[i][j] = r(small[i], big[j]);
     }
   }
-  double max, min;
-  int ii = -1, jj = -1;
-  for (int n = 0; n < small.length; n++) {
-    max = 0.0;
-    for (int i = 0; i < m.length; i++) {
-      min = 1e+6;
-      for (int j = 0; j < m[i].length; j++) {
-        if (m[i][j] < min) {
-          min = m[i][j];
-          jj = j;
-        }
-      }
-      if (min > max) {
-        max = min;
+  
+  Stack stack = bestSet(m).$1;
+  for (int i = 0; i < stack.length; i++) {
+      halfFromBig[i] = big[pop];
+  }
+  
+  return halfFromBig;
+}
+
+(double, Stack) bestSet(List<List<double>> m) {
+  // m.length < m[0].length
+  int
+    j = 0,
+    i;
+  double min = 1e+6;
+  Stack path = Stack();
+  if (m.isEmpty) {
+      return (0.0, path);
+  } else if (m.single != null) {
+    int ii = -1;
+    for (i = 0; i < m[0].length; i++) {
+      if (m[0][i] < min) {
+        min = m[0][i];
         ii = i;
       }
     }
-
-    halfFromBig.add(big[ii]);
-    halfFromSmall.add(small[jj]);
-    for (int i = 0; i < m.length; i++) {
-      m[i][jj] = 0;
-    }
-    for (double d in m[ii]) {
-      d = 128;
-    }
-  }
-  return (halfFromSmall, halfFromBig);
-}
-
-(double, Stack) someRecursive(List<List<double>> m) {
-  // m.length < m[0].length
-  double min = 1e+6;
-  int i, j = 0;
-  Stack path = Stack();
-
-  if (m.length == 2) {
+    path.push(ii);
+    return (min, path);
+  } else if (m.length == 2) {
+    int
+      ii = -1;
+      jj = -1;
     for (i = 0; i < m[0].length; i++) {
-      for (; j < i; j++) {
-        min = math.min(min, m[0][i] + m[1][j]);
+      for (j = 0; j < i; j++) {
+        if (min > m[0][i] + m[1][j]) {
+          min = m[0][i] + m[1][j];
+          ii = i;
+          jj = j;
+        }
       }
       for (j++; j < m[1].length; j++) {
-        min = math.min(min, m[0][i] + m[1][j]);
+        if (min > m[0][i] + m[1][j]) {
+          min = m[0][i] + m[1][j];
+          ii = i;
+          jj = j;
+        }
       }
     }
-    return (min, Stack.init(j, i));
+    return (min, Stack.init(jj, ii));
   } else {
     for (int i = 0; i < m[0].length; i++) {
       List<List<double>> truncatedM = [...m];
@@ -98,7 +107,7 @@ void findMatches(List<Piece> prsList, List<Piece> trgList) {
       for (int j = 0; j < truncatedM[0].length; j++) {
         truncatedM[j].removeAt(j);
       }
-      var (d, token) = someRecursive(truncatedM);
+      var (d, token) = bestSet(truncatedM);
       if (d < min) {
         min = d;
         path = token;
@@ -109,19 +118,6 @@ void findMatches(List<Piece> prsList, List<Piece> trgList) {
   }
 }
 
-class Stack {
-  final List<int> _path = [];
-
-  void push(int i) => _path.add(i);
-
-  get pop => _path.removeLast();
-
-  Stack();
-
-  Stack.init(int a, int b) {
-    _path.addAll([a, b]);
-  }
-}
 
 double r(Piece a, Piece b) =>
     math.sqrt(math.pow(a.h - b.h, 2) + math.pow(a.v - b.v, 2));
@@ -213,4 +209,20 @@ class Piece {
   static bool isTheSameLoc(Piece p1, p2) {
     return (p1.h == p2.h && p1.v == p2.v);
   }
+}
+
+enum Type { pawn, knight, bishop, rook, queen, king }
+
+class Stack {
+  Stack();
+  Stack.init(List<int> args) {
+    _path.addAll(args);
+  }
+  
+  final List<int> _path = [];
+
+  void push(int i) => _path.add(i);
+  get pop => _path.removeLast();
+
+  get length => _path.length
 }
