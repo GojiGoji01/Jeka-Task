@@ -114,7 +114,7 @@ void task1() {
   final jeka = Human(name: 'Jeka', isMale: true, age: 25);
   final ksu = Human(name: 'Ksusha', isMale: false, age: 20);
   final someGirl = Human(name: 'Unknown', isMale: false, age: 18);
-  jeka.greet(ksu.name);
+  jeka.greet(ksu);
 
   jeka.startDating(ksu);
 
@@ -138,8 +138,8 @@ class Human {
       required this.age,
       this.beloved});
 
-  void greet(String nameToSay) {
-    print('Привет, $nameToSay!');
+  void greet(Human smnToGreet) {
+    print('Привет, ${smnToGreet.name}!');
   }
 
   bool startDating(Human partnerTillTheRestOfLife) {
@@ -148,6 +148,7 @@ class Human {
         print('Сердечко занято');
         return false;
       } else {
+        partnerTillTheRestOfLife.beloved = this;
         beloved = partnerTillTheRestOfLife;
         return true;
       }
@@ -158,9 +159,13 @@ class Human {
   }
 
   bool breakUp() {
-    bool res = beloved != null;
-    beloved = null;
-    return res;
+    if (beloved != null) {
+      beloved!.beloved = null;
+      beloved = null;
+      return true;
+    } else {
+      return false;
+    }
   }
 
   @override

@@ -8,6 +8,11 @@ void main() {
           'a2 b2 c2 d2 e2 f2 g2 h2 Ra1 Nb1 Bc1 Qd1 Ke1 Bf1 Ng1 Rh1'),
       targetPosN = parsePosition(
           'a7 b7 c7 d7 e7 f7 g7 h7 Ra8 Nb8 Bc8 Qd8 Ke8 Bf8 Ng8 Rh8');
+  //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+  // var presentPosW = parsePosition('e3 d3 a7 f3 a2 h7'),
+  //     presentPosN = parsePosition(''),
+  //     targetPosW = parsePosition('c5 d6 f5 g2'),
+  //     targetPosN = parsePosition('');
 
   var matchesInPresent = areThereAnyMatches(presentPosW, presentPosN),
       matchesInTarget = areThereAnyMatches(targetPosW, targetPosN);
@@ -18,14 +23,31 @@ void main() {
   var (prsToMoveW, trgToMoveW) = findMatches(presentPosW, targetPosW);
   var (prsToMoveN, trgToMoveN) = findMatches(presentPosN, targetPosN);
 
-  print('---WHITE---');
-  print(prsToMoveW);
-  print('----TO----');
-  print(trgToMoveW);
-  print('---NIGGERS---');
-  print(prsToMoveN);
-  print('----TO----');
-  print(trgToMoveN);
+  var output = [''];
+
+  if (prsToMoveW.isEmpty) {
+    output.add('No white pieces to move');
+  } else {
+    output.add('---WHITE---');
+    output.add('Pieces to move:');
+    for (int i = 0; i < prsToMoveW.length; i++) {
+      var to = trgToMoveW[i].toString().replaceFirst(
+          trgToMoveW[i].type.name, '');
+      output.add('${prsToMoveW[i]} ->$to');
+    }
+  }
+  var maxLength = output.fold(0, (value, element) => math.max(value, element.length));
+  if (prsToMoveN.isEmpty) {
+    print('No nigger pieces to move');
+  } else {
+    print('---NIGGERS---');
+    print('Pieces to move:');
+    for (int i = 0; i < prsToMoveN.length; i++) {
+      var to = trgToMoveN[i].toString().replaceFirst(
+          trgToMoveN[i].type.name, '');
+      print('${prsToMoveN[i]} ->$to');
+    }
+  }
 }
 
 (List<Piece>, List<Piece>) findMatches(
@@ -131,8 +153,6 @@ Map<Type, List<Piece>> countPieces(List<Piece> l) {
   return m;
 }
 
-enum Color { whiteWhite, whiteNigger, niggerNigger }
-
 // Color value represents, where exactly was match
 (Piece, Piece, Color)? areThereAnyMatches(List<Piece> posW, List<Piece> posN) {
   (Piece, Piece, Color)? res;
@@ -202,8 +222,12 @@ Piece parsePiece(String s) {
 }
 
 List<Piece> parsePosition(String s) {
-  var words = s.split(' ');
-  return [for (var word in words) parsePiece(word)];
+  if (s == '') {
+    return [];
+  } else {
+    var words = s.split(' ');
+    return [for (var word in words) parsePiece(word)];
+  }
 }
 
 class Piece {
@@ -224,12 +248,9 @@ class Piece {
   @override
   String toString() {
     return '''
-    
-${type.name} $letter($h)($v)''';
+${type.name} $letter${v + 1}''';
   }
 }
-
-enum Type { pawn, knight, bishop, rook, queen, king }
 
 class MyStack {
   MyStack(List<int> args) : _path = List.from(args);
@@ -257,3 +278,7 @@ class MyStack {
   @override
   String toString() => _path.toString();
 }
+
+enum Type { pawn, knight, bishop, rook, queen, king }
+
+enum Color { whiteWhite, whiteNigger, niggerNigger }
