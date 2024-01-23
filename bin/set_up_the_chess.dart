@@ -30,10 +30,10 @@ void main() {
     output.add('No pieces to move');
   } else {
     output.add('Pieces to move:');
-    for (int i = 0; i < prsToMoveW.length; i++) {
+    for (var (i, e) in prsToMoveW.indexed) {
       var to = trgToMoveW[i].toString().replaceFirst(
           trgToMoveW[i].type.name, '');
-      output.add('${prsToMoveW[i]} ->$to');
+      output.add('$e ->$to');
     }
     if (restW.isNotEmpty) {
       output.add('');
@@ -61,10 +61,10 @@ void main() {
     onRight('No pieces to move');
   } else {
     onRight('Pieces to move:');
-    for (int i = 0; i < prsToMoveN.length; i++) {
+    for (var (i, e) in prsToMoveN.indexed) {
       var to = trgToMoveN[i].toString().replaceFirst(
           trgToMoveN[i].type.name, '');
-      onRight('${prsToMoveN[i]} ->$to');
+      onRight('$e ->$to');
     }
     if (restN.isNotEmpty) {
       onRight('');
@@ -124,52 +124,54 @@ List<List<Piece>> findMatches(
 
 (double, MyStack) theBestSet(List<List<double>> m) {
   // m.length < m[0].length
-  int j = 0, i;
+  int j = 0;
   double min = 1e+6;
-  if (m.isEmpty) {
-    return (0.0, MyStack([]));
-  } else if (m.length == 1) {
-    int ii = -1;
-    for (i = 0; i < m[0].length; i++) {
-      if (m[0][i] < min) {
-        min = m[0][i];
-        ii = i;
-      }
-    }
-    return (min, MyStack([ii]));
-  } else if (m.length == 2) {
-    int ii = -1, jj = -1;
-    for (i = 0; i < m[0].length; i++) {
-      for (j = 0; j < i; j++) {
-        if (min > m[0][i] + m[1][j]) {
-          min = m[0][i] + m[1][j];
+  int length = m.length;
+  switch (length) {
+    case 0:
+      return (0.0, MyStack([]));
+    case 1:
+      int ii = -1;
+      for (var (i, e) in m[0].indexed) {
+        if (e < min) {
+          min = e;
           ii = i;
-          jj = j;
         }
       }
-      for (j = i + 1; j < m[1].length; j++) {
-        if (min > m[0][i] + m[1][j]) {
-          min = m[0][i] + m[1][j];
-          ii = i;
-          jj = j;
+      return (min, MyStack([ii]));
+    case 2:
+      int ii = -1, jj = -1;
+      for (var (i, e) in m[0].indexed) {
+        for (j = 0; j < i; j++) {
+          if (min > e + m[1][j]) {
+            min = e + m[1][j];
+            ii = i;
+            jj = j;
+          }
+        }
+        for (j = i + 1; j < m[1].length; j++) {
+          if (min > e + m[1][j]) {
+            min = e + m[1][j];
+            ii = i;
+            jj = j;
+          }
         }
       }
-    }
-    return (min, MyStack([jj, ii]));
-  } else {
-    MyStack path = MyStack.err();
-    List<List<double>> nedoTruncatedM = m.skip(1).toList(growable: false);
-    for (int i = 0; i < m[0].length; i++) {
-      var trM = withoutLine(i, nedoTruncatedM);
-      var (d, token) = theBestSet(trM);
-      if (d + m[0][i] < min) {
-        min = d + m[0][i];
-        path = token;
-        path.forUntoEveryOneThatHathShallBeGiven(i);
-        path.push(i);
+      return (min, MyStack([jj, ii]));
+    default:
+      MyStack path = MyStack.err();
+      List<List<double>> nedoTruncatedM = m.skip(1).toList(growable: false);
+      for (var (i, e) in m[0].indexed) {
+        var trM = withoutLine(i, nedoTruncatedM);
+        var (d, token) = theBestSet(trM);
+        if (d + e < min) {
+          min = d + e;
+          path = token;
+          path.forUntoEveryOneThatHathShallBeGiven(i);
+          path.push(i);
+        }
       }
-    }
-    return (min, path);
+      return (min, path);
   }
 }
 
