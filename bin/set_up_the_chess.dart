@@ -176,8 +176,8 @@ List<List<Piece>> findMatches(
 }
 
 List<List<double>> withoutLine(int line, List<List<double>> nedoTruncatedM) => [
-      for (int j = 0; j < nedoTruncatedM.length; j++)
-        [...nedoTruncatedM[j].take(line), ...nedoTruncatedM[j].skip(line + 1)]
+      for (var e in nedoTruncated)
+        [...e.take(line), ...e.skip(line + 1)]
     ];
 
 double r(Piece a, Piece b) =>
