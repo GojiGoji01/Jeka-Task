@@ -30,8 +30,8 @@ void main() {
 
 var _output = [''];
 
-void assNiggaPrintAll(
-    List<Piece> prsToMoveN, trgToMoveN, restN, int leftWidth) {
+void assNiggaPrintAll(List<Piece> prsToMoveN, List<Piece> trgToMoveN,
+    List<Piece> restN, int leftWidth) {
   int counter = 0;
   void printToTheRight(String s) {
     if (counter == _output.length) {
@@ -62,7 +62,7 @@ void assNiggaPrintAll(
   _output.skip(counter).forEach(print);
 }
 
-int assembleWhite(List<Piece> prsToMoveW, trgToMoveW, restW) {
+int assembleWhite(List<Piece> prsToMoveW, List<Piece> trgToMoveW, restW) {
   _output.add('---WHITE---');
   if (prsToMoveW.isEmpty) {
     _output.add('No pieces to move');
@@ -84,9 +84,9 @@ int assembleWhite(List<Piece> prsToMoveW, trgToMoveW, restW) {
   return leftWidth;
 }
 
-//  |||||||||||||||||||||||||||
-//  |||----CALCULATIONS-----|||
-//  |||||||||||||||||||||||||||
+//  ||||||||||||||||||||||||||
+//  |||>-  CALCULATIONS  -<|||
+//  ||||||||||||||||||||||||||
 
 List<List<Piece>> findMatches(List<Piece> prsList, List<Piece> trgList) {
   final [prsHalf, trgHalf, prsRest] = [for (var i = 0; i < 3; i++) <Piece>[]];
@@ -199,9 +199,9 @@ Map<Type, List<Piece>> countPieces(List<Piece> l) {
   return m;
 }
 
-//  ||||||||||||||||||||||||
-//  |||----PREPARING-----|||
-//  ||||||||||||||||||||||||
+//  |||||||||||||||||||||||
+//  |||>-  PREPARING  -<|||
+//  |||||||||||||||||||||||
 
 // Color value represents, where exactly was match
 (Piece, Piece, Color)? areThereAnyMatches(List<Piece> posW, List<Piece> posN) {
@@ -297,7 +297,7 @@ class Piece {
   String toString() {
     return '''${type.name} $letter${v + 1}''';
   }
-  // static int toH(String s) => s.codeUnitAt(0) - 'a'.codeUnitAt(0);
+// static int toH(String s) => s.codeUnitAt(0) - 'a'.codeUnitAt(0);
 }
 
 class MyStack {
