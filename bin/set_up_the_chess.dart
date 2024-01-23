@@ -16,7 +16,7 @@ void main() {
 
   var matchesInPresent = areThereAnyMatches(presentPosW, presentPosN),
       matchesInTarget = areThereAnyMatches(targetPosW, targetPosN);
-  
+
   if (matchesInPresent != null || matchesInTarget != null) {
     throw Exception(matchesInPresent ?? ('target', matchesInTarget));
   }
@@ -24,61 +24,72 @@ void main() {
   var [prsToMoveW, trgToMoveW, restW] = findMatches(presentPosW, targetPosW);
   var [prsToMoveN, trgToMoveN, restN] = findMatches(presentPosN, targetPosN);
 
-  var output = [''];
-    output.add('---WHITE---');
-  if (prsToMoveW.isEmpty) {
-    output.add('No pieces to move');
-  } else {
-    output.add('Pieces to move:');
-    for (var (i, e) in prsToMoveW.indexed) {
-      var to = trgToMoveW[i].toString().replaceFirst(
-          trgToMoveW[i].type.name, '');
-      output.add('$e ->$to');
-    }
-    if (restW.isNotEmpty) {
-      output.add('');
-      output.add('Other pieces:');
-      output.addAll([for (Piece p in restW) p.toString()]);
-    }
-  }
-  var leftWidth = output.fold(0, (max, e) => math.max(max, e.length));
-  leftWidth += 2;
-  
+  int leftWidth = assembleWhite(prsToMoveW, trgToMoveW, restW) + 3;
+  assNiggaPrintAll(prsToMoveN, trgToMoveN, restN, leftWidth);
+}
+
+var _output = [''];
+
+void assNiggaPrintAll(
+    List<Piece> prsToMoveN, trgToMoveN, restN, int leftWidth) {
   int counter = 0;
-  
-  void onRight(String s) {
-    if (counter == output.length) {
+  void printToTheRight(String s) {
+    if (counter == _output.length) {
       print(' ' * leftWidth + s);
     } else {
-      print(output[counter].padRight(leftWidth) + s);
+      print(_output[counter].padRight(leftWidth) + s);
       counter++;
     }
   }
-  
-  onRight('');
-  onRight('---NIGGERS---');
+
+  printToTheRight('');
+  printToTheRight('---NIGGERS---');
   if (prsToMoveN.isEmpty) {
-    onRight('No pieces to move');
+    printToTheRight('No pieces to move');
   } else {
-    onRight('Pieces to move:');
+    printToTheRight('Pieces to move:');
     for (var (i, e) in prsToMoveN.indexed) {
-      var to = trgToMoveN[i].toString().replaceFirst(
-          trgToMoveN[i].type.name, '');
-      onRight('$e ->$to');
+      var to =
+          trgToMoveN[i].toString().replaceFirst(trgToMoveN[i].type.name, '');
+      printToTheRight('$e ->$to');
     }
     if (restN.isNotEmpty) {
-      onRight('');
-      onRight('Other pieces:');
-      [for (Piece p in restN) p.toString()].forEach(onRight);
+      printToTheRight('');
+      printToTheRight('Other pieces:');
+      [for (Piece p in restN) p.toString()].forEach(printToTheRight);
     }
   }
-  output.skip(counter).forEach(print);
+  _output.skip(counter).forEach(print);
 }
 
-List<List<Piece>> findMatches(
-    List<Piece> prsList, List<Piece> trgList) {
-  final [prsHalf, trgHalf, prsRest] =
-    [for(var i = 0; i < 3; i++) <Piece>[]];
+int assembleWhite(List<Piece> prsToMoveW, trgToMoveW, restW) {
+  _output.add('---WHITE---');
+  if (prsToMoveW.isEmpty) {
+    _output.add('No pieces to move');
+  } else {
+    _output.add('Pieces to move:');
+    for (var (i, e) in prsToMoveW.indexed) {
+      var to =
+          trgToMoveW[i].toString().replaceFirst(trgToMoveW[i].type.name, '');
+      _output.add('$e ->$to');
+    }
+    if (restW.isNotEmpty) {
+      _output.add('');
+      _output.add('Other pieces:');
+      _output.addAll([for (Piece p in restW) p.toString()]);
+    }
+  }
+  // ширина столбца для белых
+  var leftWidth = _output.fold(0, (max, e) => math.max(max, e.length));
+  return leftWidth;
+}
+
+//  |||||||||||||||||||||||||||
+//  |||----CALCULATIONS-----|||
+//  |||||||||||||||||||||||||||
+
+List<List<Piece>> findMatches(List<Piece> prsList, List<Piece> trgList) {
+  final [prsHalf, trgHalf, prsRest] = [for (var i = 0; i < 3; i++) <Piece>[]];
   //подсчёт пешек, ферзей и тд
   Map<Type, List<Piece>> prs = countPieces(prsList);
   Map<Type, List<Piece>> trg = countPieces(trgList);
@@ -117,8 +128,9 @@ List<List<Piece>> findMatches(
   var indexes = stack.toList;
   indexes.sort();
   var d = [-1, ...indexes, big.length];
-  var rest = [for (int i = 0; i < d.length - 1; i++)
-              ...big.getRange(d[i]+1, d[i+1])];
+  var rest = [
+    for (int i = 0; i < d.length - 1; i++) ...big.getRange(d[i] + 1, d[i + 1])
+  ];
   return (halfFromBig, rest);
 }
 
@@ -126,8 +138,7 @@ List<List<Piece>> findMatches(
   // m.length < m[0].length
   int j = 0;
   double min = 1e+6;
-  int length = m.length;
-  switch (length) {
+  switch (m.length) {
     case 0:
       return (0.0, MyStack([]));
     case 1:
@@ -145,15 +156,13 @@ List<List<Piece>> findMatches(
         for (j = 0; j < i; j++) {
           if (min > e + m[1][j]) {
             min = e + m[1][j];
-            ii = i;
-            jj = j;
+            (ii, jj) = (i, j);
           }
         }
         for (j = i + 1; j < m[1].length; j++) {
           if (min > e + m[1][j]) {
             min = e + m[1][j];
-            ii = i;
-            jj = j;
+            (ii, jj) = (i, j);
           }
         }
       }
@@ -176,8 +185,7 @@ List<List<Piece>> findMatches(
 }
 
 List<List<double>> withoutLine(int line, List<List<double>> nedoTruncatedM) => [
-      for (var e in nedoTruncated)
-        [...e.take(line), ...e.skip(line + 1)]
+      for (var e in nedoTruncatedM) [...e.take(line), ...e.skip(line + 1)]
     ];
 
 double r(Piece a, Piece b) =>
@@ -190,6 +198,10 @@ Map<Type, List<Piece>> countPieces(List<Piece> l) {
   }
   return m;
 }
+
+//  ||||||||||||||||||||||||
+//  |||----PREPARING-----|||
+//  ||||||||||||||||||||||||
 
 // Color value represents, where exactly was match
 (Piece, Piece, Color)? areThereAnyMatches(List<Piece> posW, List<Piece> posN) {
@@ -281,13 +293,11 @@ class Piece {
 
   get letter => const Utf8Decoder().convert(["a".codeUnitAt(0) + h]);
 
-  static int toH(String s) => s.codeUnitAt(0) - 'a'.codeUnitAt(0);
-
   @override
   String toString() {
-    return '''
-${type.name} $letter${v + 1}''';
+    return '''${type.name} $letter${v + 1}''';
   }
+  // static int toH(String s) => s.codeUnitAt(0) - 'a'.codeUnitAt(0);
 }
 
 class MyStack {
@@ -302,11 +312,12 @@ class MyStack {
   int get pop => _path.removeLast();
 
   int get length => _path.length;
-  
+
   List<int> get toList => _path;
 
   int at(int index) => _path[_path.length - 1 - index];
 
+  // скорректировать индексы для применения к исходной матрице
   void forUntoEveryOneThatHathShallBeGiven(int lineNum) {
     for (int i = 0; i < _path.length; i++) {
       if (_path[i] >= lineNum) {
