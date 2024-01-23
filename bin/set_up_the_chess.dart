@@ -77,7 +77,7 @@ void main() {
 
 List<List<Piece>> findMatches(
     List<Piece> prsList, List<Piece> trgList) {
-  var [prsHalf, trgHalf, prsRest] =
+  final [prsHalf, trgHalf, prsRest] =
     [for(var i = 0; i < 3; i++) <Piece>[]];
   //подсчёт пешек, ферзей и тд
   Map<Type, List<Piece>> prs = countPieces(prsList);
@@ -87,9 +87,9 @@ List<List<Piece>> findMatches(
   for (Type t in Type.values) {
     if (trg[t]!.length >= prs[t]!.length) {
       prsHalf.addAll(prs[t]!);
-      var trgRec = selectFromBig(prs[t]!, trg[t]!);
-      trgHalf.addAll(trgRec.$1);
-      prsRest.addAll(trgRec.$2);
+      rec = selectFromBig(prs[t]!, trg[t]!);
+      trgHalf.addAll(rec.$1);
+      prsRest.addAll(rec.$2);
     } else {
       trgHalf.addAll(trg[t]!);
       rec = selectFromBig(trg[t]!, prs[t]!);
