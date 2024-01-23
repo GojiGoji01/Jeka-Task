@@ -2,74 +2,105 @@ import 'dart:convert';
 import 'dart:math' as math;
 
 void main() {
-  var presentPosW = parsePosition('Kg1 Rf1 f2 g3 h4'),
-      presentPosN = parsePosition('Kg8 Rf8 f7 g6 h5'),
-      targetPosW = parsePosition(
-          'a2 b2 c2 d2 e2 f2 g2 h2 Ra1 Nb1 Bc1 Qd1 Ke1 Bf1 Ng1 Rh1'),
-      targetPosN = parsePosition(
-          'a7 b7 c7 d7 e7 f7 g7 h7 Ra8 Nb8 Bc8 Qd8 Ke8 Bf8 Ng8 Rh8');
-  //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
-  // var presentPosW = parsePosition('e3 d3 a7 f3 a2 h7'),
-  //     presentPosN = parsePosition(''),
-  //     targetPosW = parsePosition('c5 d6 f5 g2'),
-  //     targetPosN = parsePosition('');
+//   var presentPosW = parsePosition('Kg1 Rf1 f2 g3 h4'),
+//       presentPosN = parsePosition('Kg8 Rf8 f7 g6 h5'),
+//       targetPosW = parsePosition(
+//           'a2 b2 c2 d2 e2 f2 g2 h2 Ra1 Nb1 Bc1 Qd1 Ke1 Bf1 Ng1 Rh1'),
+//       targetPosN = parsePosition(
+//           'a7 b7 c7 d7 e7 f7 g7 h7 Ra8 Nb8 Bc8 Qd8 Ke8 Bf8 Ng8 Rh8');
+//   ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+  var presentPosW = parsePosition(''),
+      presentPosN = parsePosition('e3 d3 a7 f3 a2 h7'),
+      targetPosW = parsePosition(''),
+      targetPosN = parsePosition('c5 d6 f5 g2');
 
   var matchesInPresent = areThereAnyMatches(presentPosW, presentPosN),
       matchesInTarget = areThereAnyMatches(targetPosW, targetPosN);
+  
   if (matchesInPresent != null || matchesInTarget != null) {
     throw Exception(matchesInPresent ?? ('target', matchesInTarget));
   }
 
-  var (prsToMoveW, trgToMoveW) = findMatches(presentPosW, targetPosW);
-  var (prsToMoveN, trgToMoveN) = findMatches(presentPosN, targetPosN);
+  var [prsToMoveW, trgToMoveW, restW] = findMatches(presentPosW, targetPosW);
+  var [prsToMoveN, trgToMoveN, restN] = findMatches(presentPosN, targetPosN);
 
   var output = [''];
-
-  if (prsToMoveW.isEmpty) {
-    output.add('No white pieces to move');
-  } else {
     output.add('---WHITE---');
+  if (prsToMoveW.isEmpty) {
+    output.add('No pieces to move');
+  } else {
     output.add('Pieces to move:');
     for (int i = 0; i < prsToMoveW.length; i++) {
       var to = trgToMoveW[i].toString().replaceFirst(
           trgToMoveW[i].type.name, '');
       output.add('${prsToMoveW[i]} ->$to');
     }
+    if (restW.isNotEmpty) {
+      output.add('');
+      output.add('Other pieces:');
+      output.addAll([for (Piece p in restW) p.toString()]);
+    }
   }
-  var maxLength = output.fold(0, (value, element) => math.max(value, element.length));
+  var leftWidth = output.fold(0, (max, e) => math.max(max, e.length));
+  leftWidth += 2;
+  
+  int counter = 0;
+  
+  void onRight(String s) {
+    if (counter == output.length) {
+      print(' ' * leftWidth + s);
+    } else {
+      print(output[counter].padRight(leftWidth) + s);
+      counter++;
+    }
+  }
+  
+  onRight('');
+  onRight('---NIGGERS---');
   if (prsToMoveN.isEmpty) {
-    print('No nigger pieces to move');
+    onRight('No pieces to move');
   } else {
-    print('---NIGGERS---');
-    print('Pieces to move:');
+    onRight('Pieces to move:');
     for (int i = 0; i < prsToMoveN.length; i++) {
       var to = trgToMoveN[i].toString().replaceFirst(
           trgToMoveN[i].type.name, '');
-      print('${prsToMoveN[i]} ->$to');
+      onRight('${prsToMoveN[i]} ->$to');
+    }
+    if (restN.isNotEmpty) {
+      onRight('');
+      onRight('Other pieces:');
+      [for (Piece p in restN) p.toString()].forEach(onRight);
     }
   }
+  output.skip(counter).forEach(print);
 }
 
-(List<Piece>, List<Piece>) findMatches(
+List<List<Piece>> findMatches(
     List<Piece> prsList, List<Piece> trgList) {
-  var prsHalf = <Piece>[], trgHalf = <Piece>[];
+  var [prsHalf, trgHalf, prsRest] =
+    [for(var i = 0; i < 3; i++) <Piece>[]];
   //подсчёт пешек, ферзей и тд
   Map<Type, List<Piece>> prs = countPieces(prsList);
   Map<Type, List<Piece>> trg = countPieces(trgList);
 
+  (List<Piece>, List<Piece>) rec;
   for (Type t in Type.values) {
     if (trg[t]!.length >= prs[t]!.length) {
       prsHalf.addAll(prs[t]!);
-      trgHalf.addAll(selectFromBig(prs[t]!, trg[t]!));
+      var trgRec = selectFromBig(prs[t]!, trg[t]!);
+      trgHalf.addAll(trgRec.$1);
+      prsRest.addAll(trgRec.$2);
     } else {
       trgHalf.addAll(trg[t]!);
-      prsHalf.addAll(selectFromBig(trg[t]!, prs[t]!));
+      rec = selectFromBig(trg[t]!, prs[t]!);
+      prsHalf.addAll(rec.$1);
+      prsRest.addAll(rec.$2);
     }
   }
-  return (prsHalf, trgHalf);
+  return [prsHalf, trgHalf, prsRest];
 }
 
-List<Piece> selectFromBig(List<Piece> small, List<Piece> big) {
+(List<Piece>, List<Piece>) selectFromBig(List<Piece> small, List<Piece> big) {
   List<List<double>> matrix = List.generate(
       small.length,
       growable: false,
@@ -83,7 +114,12 @@ List<Piece> selectFromBig(List<Piece> small, List<Piece> big) {
   MyStack stack = theBestSet(matrix).$2;
   List<Piece> halfFromBig =
       List.generate(stack.length, (index) => big[stack.at(index)]);
-  return halfFromBig;
+  var indexes = stack.toList;
+  indexes.sort();
+  var d = [-1, ...indexes, big.length];
+  var rest = [for (int i = 0; i < d.length - 1; i++)
+              ...big.getRange(d[i]+1, d[i+1])];
+  return (halfFromBig, rest);
 }
 
 (double, MyStack) theBestSet(List<List<double>> m) {
@@ -241,7 +277,7 @@ class Piece {
     return (p1.h == p2.h && p1.v == p2.v);
   }
 
-  get letter => Utf8Decoder().convert(["a".codeUnitAt(0) + h]);
+  get letter => const Utf8Decoder().convert(["a".codeUnitAt(0) + h]);
 
   static int toH(String s) => s.codeUnitAt(0) - 'a'.codeUnitAt(0);
 
@@ -261,9 +297,11 @@ class MyStack {
 
   void push(int i) => _path.add(i);
 
-  get pop => _path.removeLast();
+  int get pop => _path.removeLast();
 
-  get length => _path.length;
+  int get length => _path.length;
+  
+  List<int> get toList => _path;
 
   int at(int index) => _path[_path.length - 1 - index];
 
