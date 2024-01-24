@@ -1,5 +1,5 @@
 void main(List<String> arguments) {
-  const taskNumber = 3;
+  const taskNumber = 5;
 
   switch (taskNumber) {
     case 1:
@@ -17,26 +17,45 @@ void main(List<String> arguments) {
   }
 }
 
+final a = <int>[1, 2, 3, -1, 4, 5];
+
 void task1() {
   // Выводит все элементы массива.
+  a.forEach(spacedPrint);
 }
 
 void task2() {
   // Выводит все элементы массива в обратном порядке.
+  a.reversed.forEach(spacedPrint);
 }
 
 void task3() {
   // Выводит чётные элементы массива.
-}
-
-void task3Jeka() {
-  // Выводит чётные элементы массива.
+  for (var element in a) {
+    if (!element.isOdd) spacedPrint(element);
+  }
+  // a
+  //     .where((e) => e % 2 == 0)
+  //     .forEach(print);
 }
 
 void task4() {
   // Выводит все элементы массива через 1.
+  for (int i = 0; i < a.length; i += 2) {
+    spacedPrint(a[i]);
+  }
+  // bool flag = true;
+  // a.forEach((element) {
+  //   if (flag) print(element);
+  //   flag = !flag;
+  // });
 }
 
 void task5() {
   // Выводит все элементы массива пока не встретится элемент -1.
+  for (int i = 0; i < a.length && a[i] != -1; i++) {
+    spacedPrint(a[i]);
+  }
 }
+
+void spacedPrint(int value) => print('$value ');

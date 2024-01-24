@@ -5,7 +5,7 @@ Future<void> main() async {
   // } else {
   //   _explanation();
   // }
-  task1();
+  _explanation();
 }
 
 // <––––––––––––––––––––––––– FOUNDATION EXAMPLE –––––––––––––––––––––––––>
@@ -137,59 +137,7 @@ final class TestUser extends User {
   }) : super(name, age);
 }
 
-// <––––––––––––––––––––––––– KIRILL TASKS –––––––––––––––––––––––––>
-
-sealed class AccountFailure implements Exception {}
-
-final class UnknownFailure extends AccountFailure {}
-
-final class NotFoundFailure extends AccountFailure {}
-
-final class ForbiddenFailure extends AccountFailure {}
-
-void a() {
-  final AccountFailure failure = NotFoundFailure();
-
-  switch (failure) {
-    case UnknownFailure():
-      print('');
-    case NotFoundFailure():
-      print('');
-    case ForbiddenFailure():
-      print('');
-  }
-}
-
-final class AlreadyStartedRelationshipException implements Exception {
-  const AlreadyStartedRelationshipException(this.human);
-
-  final Human human;
-
-  @override
-  String toString() => 'К сожалению ${human.name} уже состоит в отношениях!';
-}
-
-final class SameSexException implements Exception {
-  const SameSexException(this.human1, this.human2);
-
-  final Human human1;
-  final Human human2;
-
-  @override
-  String toString() =>
-      '${human1.name} и ${human2.name} не могут состоять в отношениях, они одного пола!';
-}
-
-final class NotInRelationshipException implements Exception {
-  const NotInRelationshipException(this.human1, this.human2);
-
-  final Human human1;
-  final Human human2;
-
-  @override
-  String toString() =>
-      '${human1.name} и ${human2.name} не могут расстаться, они не состояли в отношениях!';
-}
+// <––––––––––––––––––––––––– PHILLIPS TASKS –––––––––––––––––––––––––>
 
 Future<void> task1() async {
   /*
@@ -199,130 +147,4 @@ Future<void> task1() async {
   друг с другом) Попробуй вызывать эти функции обоими способами (.then и await),
   и также используй соответсвующие обработчики ошибок для них.
   */
-  //На данном этапе это все как смог разобраться пока в future, пока что не
-  //нашел где искать инфу про ".then"
-  final kate = Female(name: 'Катя', age: 23);
-  final igor = Male(name: 'Игорь', age: 27);
-
-  igor.salutation(kate);
-  try {
-    /*
-    await не используем вместе с .then, .catchError
-    Внизу пример двух корректный, но разный реализаций с объяснением
-    */
-    await igor
-        .startRelationship(kate)
-        .then((value) => null)
-        .catchError((error) {
-      print(error);
-    });
-    igor.stopRelationship(kate);
-  } catch (e) {
-    print(e);
-  }
-  try {
-    // так как мы используем await для выполнения Future, значит, что мы
-    // требуем Future выполниться синхронно и будем ожидать его выполнения и
-    // возврата значения (или выброса ошибки). В таком случае, чтобы отловить
-    // возможные ошибки мы оборачиваем вызов в блок try-catch, где в catch'е
-    // мы и ловим эксепшены
-
-    // Вызов
-    await igor.startRelationship(kate);
-
-    // В случае если await выполнится успешно, то выполнится эта строчка
-    print('success');
-  } catch (e) {
-    // В противном случае мы проваливаемся в блок catch где у нас есть доступ
-    // к выброшенному эксепшену
-    print(e);
-  }
-
-  // 2 вариант без использования await
-
-  // Во-первых, никакого await, а значит, что функцию начинаем свое выполнение
-  // параллельно с остальными командами в вызывающей функции
-  igor
-      .startRelationship(kate)
-      // задаем блок then, который выполнится после успешного выполнения Future
-      .then(
-    (_) {
-      // название параметра прочерк, так как Future возвращает void.
-      print('success');
-    },
-    // определяем блок ошибки, который будет вызван в случае, если Future
-    // выбросил эксепшн
-  ).catchError((e) {
-    print('Не удалость начать отношения между ${igor.name} и ${kate.name}');
-    print(e);
-  });
 }
-
-abstract base class Human {
-  final String name;
-  final int age;
-  final Sex sex;
-  Human? relationshipStatus;
-
-  Human(this.name, this.age, this.sex);
-
-  void salutation(Human another) {
-    print('Привет, ${another.name}!');
-  }
-
-  Future<void> startRelationship(Human another) async {
-    /*
-    для делэя достаточно просто вызвать синхронно через await Future.delayed()
-    и все, прога зависнет на время длительности. Фактически, это Future в котором
-    функция с таймером на время, когда время закончится Future уведомляет вызывающую
-    функцию о своем успешном выполнении
-     */
-    await Future.delayed(const Duration(seconds: 2));
-    // final delay = await Future.delayed(Duration(seconds: 2), (() => null));
-    if (another.relationshipStatus == null &&
-        relationshipStatus == null &&
-        another.sex != sex) {
-      relationshipStatus = another;
-      another.relationshipStatus = this;
-      // Здесь можно не выбрасывать такой эксепшн, так как вызвав данную
-      // Future функцию (startRelationship), мы будем знать, что она удачно
-      // выполнилась когда не вылетел ни один эксепшн
-      print('$name и ${another.name} начали встречаться!');
-    } else if (another.relationshipStatus != null) {
-      throw AlreadyStartedRelationshipException(another);
-    } else if (relationshipStatus != null) {
-      throw AlreadyStartedRelationshipException(this);
-    } else if (another.sex == sex) {
-      throw SameSexException(this, another);
-    }
-    // у тебя функция void соответственно необязательно что-то возвращать,
-    // тем более этот delay.
-    // return delay;
-  }
-
-  Future<void> stopRelationship(Human another) async {
-    if (relationshipStatus == another) {
-      relationshipStatus = null;
-      another.relationshipStatus = null;
-      print('$name и ${another.name} расстались!');
-    } else {
-      throw NotInRelationshipException(this, another);
-    }
-  }
-
-  @override
-  String toString() {
-    return '$name(Age: $age, Sex: ${sex.name})';
-  }
-}
-
-final class Male extends Human {
-  Male({required String name, required int age}) : super(name, age, Sex.male);
-}
-
-final class Female extends Human {
-  Female({required String name, required int age})
-      : super(name, age, Sex.female);
-}
-
-enum Sex { male, female }

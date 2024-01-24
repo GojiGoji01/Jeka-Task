@@ -1,5 +1,7 @@
 // import 'dart:math';
 
+import 'dart:math';
+
 void main() {
   task3();
   /*
@@ -125,6 +127,23 @@ void task1() {
   Напечатать '2', если rnd лежит между x и y.
   Напечатать '3', если rnd лежит перед х.
   */
+
+  int y = Random().nextInt(10);
+  int x = Random().nextInt(10);
+  int rnd = Random().nextInt(10);
+  print('y=$y, x=$x, rnd=$rnd');
+  if (rnd > y) {
+    print(1);
+    if (rnd < x) {
+      print('2\n3');
+    }
+  } else if (rnd != y && rnd > x) {
+    print(2);
+  } else if (rnd < x) {
+    print(3);
+  } else {
+    print('x <= y && (x == rnd || y == rnd)');
+  }
 }
 
 void task2() {
@@ -132,6 +151,31 @@ void task2() {
   Создай массив со всеми цветами светофора. Пройдись 4 раза по всему массиву, и
   выведи в консоль true, когда водителю можно ехать, и false когда ехать нельзя.
   */
+  final a = <String>['Red', 'Yellow', 'Green'];
+  int r;
+  for (int i = 0; i < 16; i++) {
+    r = i % 4;
+    print(a[r < 3 ? r : 1] == 'Green');
+  }
+}
+
+void task2Jeka() {
+  const redLight = 'Red';
+  const yellowLight = 'Yellow';
+  const greenLight = 'Green';
+
+  final trafficLights = <String>[redLight, yellowLight, greenLight];
+
+  String? previousLight;
+  for (int i = 0; i < 3; i++) {
+    for (final light in trafficLights) {
+      print('Previous Light: $previousLight');
+      print('Current Light: $light');
+      print(light != redLight ||
+          (light == yellowLight && previousLight == redLight));
+      previousLight = light;
+    }
+  }
 }
 
 void task3() {
@@ -141,4 +185,31 @@ void task3() {
   подается и распределять его в соответствующий магазин. В конце программа должна
   вывести в консоль количество продуктов в каждом магазине после распределения.
   */
+  final products = [
+    Product.potato,
+    Product.apple,
+    Product.orange,
+    Product.apple,
+    Product.tomato,
+    Product.apple,
+    Product.potato,
+    Product.apple,
+    Product.potato,
+    Product.tomato,
+    Product.potato,
+    Product.orange,
+  ];
+  final fruitStore = <Product>[];
+  final vegetableStore = <Product>[];
+
+  for (var product in products) {
+    if (product == Product.apple || product == Product.orange) {
+      fruitStore.add(product);
+    } else if (product == Product.potato || product == Product.tomato) {
+      vegetableStore.add(product);
+    }
+  }
+  print("${fruitStore.length} ${vegetableStore.length}");
 }
+
+enum Product { apple, orange, tomato, potato }

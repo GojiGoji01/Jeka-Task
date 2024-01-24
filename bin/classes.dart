@@ -83,14 +83,14 @@ class Square extends Shape {
   /// sqr.sideSize = 10; <--- компилятор выдаст ошибку, так как sideSize это
   /// геттер.
   double get sideSize => sqrt(area); // sqrt(x) - функция, выдающая квадратный
-  // корень из x.
+// корень из x.
 }
 
 class Triangle extends Shape {
   Triangle(
       {required super.area,
       this.isEquilateral =
-          false /*необязательный параметр, 
+          false /*необязательный параметр,
   но если мы его не укажем, то установится дефолтное значение */
       })
       : super(sidesCount: 3);
@@ -103,62 +103,79 @@ void task1() {
   Необходимо создать класс Человек с параметрами: имя, пол, возраст, и методами:
   поприветствовать, который будет выводить в консоль Привет, [Имя другого человека]!.
 
-  Также создать функцию "начать отношения", параметром принимающая другого человека и 
+  Также создать функцию "начать отношения", параметром принимающая другого человека и
   проверяющая его пол и наличие других отношений. Если пол противоположен и у другого
   человека нет отношений, то начать отношения с этим человеком, в противном случае вывести
   в консоль причину отказа (пол или наличие отношений).
 
   Также создать функцию "разорвать отношения", которая разрывает текущие отношения,
-  если таковые имеются. 
+  если таковые имеются.
    */
-  var male = Human('Игорь', Sex.male, 18);
-  var female = Human('Наташа', Sex.female, 28);
+  final jeka = Human(name: 'Jeka', isMale: true, age: 25);
+  final ksu = Human(name: 'Ksusha', isMale: false, age: 20);
+  final someGirl = Human(name: 'Unknown', isMale: false, age: 18);
+  jeka.greet(ksu);
 
-  male.salutation(female);
-  male.stopRelationship(female);
+  jeka.startDating(ksu);
+
+  jeka.startDating(someGirl);
+
+  print(jeka);
+  print(ksu);
+
+  // Same to breakUp func
 }
 
 class Human {
-  final String name;
-  final Sex sex;
-  final int age;
+  String name;
+  final bool isMale;
+  int age;
+  Human? beloved;
 
-  Human? relationshipStatus;
+  Human(
+      {required this.name,
+      required this.isMale,
+      required this.age,
+      this.beloved});
 
-  Human(this.name, this.sex, this.age);
-
-  void salutation(Human another) {
-    print('Привет, ${another.name}!');
+  void greet(Human smnToGreet) {
+    print('Привет, ${smnToGreet.name}!');
   }
 
-  void stopRelationship(Human another) {
-    if (relationshipStatus == another) {
-      relationshipStatus = null;
-      another.relationshipStatus = null;
-      print('$name и ${another.name} расстались!');
+  bool startDating(Human partnerTillTheRestOfLife) {
+    if (isMale != partnerTillTheRestOfLife.isMale) {
+      if (beloved != null) {
+        print('Сердечко занято');
+        return false;
+      } else {
+        partnerTillTheRestOfLife.beloved = this;
+        beloved = partnerTillTheRestOfLife;
+        return true;
+      }
     } else {
-      print('$name и ${another.name} не состоят в отношениях!');
+      print('срам');
+      return false;
     }
   }
 
-  void startRelationship(Human another) {
-    if (another.relationshipStatus == null &&
-        relationshipStatus == null &&
-        another.sex != sex) {
-      relationshipStatus = another;
-      another.relationshipStatus = this;
-      print('$name и ${another.name} вступают в отношения!');
-    } else if (another.relationshipStatus != null) {
-      print('${another.name} уже состоит в отношениях!');
-    } else if (relationshipStatus != null) {
-      print('$name уже состоит в отношениях!');
-    } else if (another.sex == sex) {
-      print(
-          '$name и ${another.name} не могут состоять в отношениях, они одного пола!');
+  bool breakUp() {
+    if (beloved != null) {
+      beloved!.beloved = null;
+      beloved = null;
+      return true;
+    } else {
+      return false;
     }
+  }
+
+  @override
+  String toString() {
+    return '''
+––––––––––––––––––––
+name: $name
+age: $age
+gender: ${isMale ? 'male' : 'female'}
+beloved: ${beloved?.name}
+''';
   }
 }
-
-enum Sex { male, female }
-
-void function() {}
